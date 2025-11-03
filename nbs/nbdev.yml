@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "mistocr"
+  site-url: "https://franckalbinet.github.io/mistocr"
+  description: "Batch conversion of a single pdf or folder using mistral ocr"
+  repo-branch: main
+  repo-url: "https://github.com/franckalbinet/mistocr"
