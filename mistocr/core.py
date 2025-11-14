@@ -164,7 +164,13 @@ def _run_batch(entries:list[dict], c:Mistral, poll_interval:int=2) -> list[dict]
     return download_results(job, c)
 
 # %% ../nbs/00_core.ipynb 44
-def ocr(path:str, out_dir:str='md', inc_img:bool=True, key:str=None, poll_interval:int=2) -> list[Path]:
+def ocr(
+    path:str, # Path to PDF file or folder,
+    out_dir:str='md', # Directory to save markdown pages, 
+    inc_img:bool=True, # Include image in response, 
+    key:str=None, # API key, 
+    poll_interval:int=2 # Poll interval in seconds
+    ) -> list[Path]: # List of output directories
     "OCR a PDF file or folder of PDFs and save results"
     pdfs = _get_paths(path)
     entries, c = _prep_batch(pdfs, inc_img, key)
