@@ -15,11 +15,10 @@ for large document sets.
 **Cost savings**: Batch OCR mode reduces costs from \$1/1000 pages to
 \$0.50/1000 pages - a 50% reduction compared to synchronous processing.
 
-**Simplicity**: A single
-[`ocr()`](https://franckalbinet.github.io/mistocr/core.html#ocr)
-function handles everything - uploading, batch submission, polling for
-completion, and saving results as markdown with extracted images.
-Process one PDF or an entire folder with the same simple interface.
+**Simplicity**: A single `ocr()` function handles everything -
+uploading, batch submission, polling for completion, and saving results
+as markdown with extracted images. Process one PDF or an entire folder
+with the same simple interface.
 
 **Organized output**: Each PDF is automatically saved to its own folder
 with pages as separate markdown files and images in an `img` subfolder,

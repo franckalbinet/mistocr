@@ -8,13 +8,17 @@ __all__ = ['ocr_model', 'ocr_endpoint', 'get_api_key', 'upload_pdf', 'create_bat
 
 # %% ../nbs/00_core.ipynb 3
 from fastcore.all import *
-import os, re, json, time, base64, tempfile, logging
+from dotenv import load_dotenv
+import os, json, time, base64, tempfile
 from io import BytesIO
 from pathlib import Path
 from PIL import Image
 from mistralai import Mistral
 
 # %% ../nbs/00_core.ipynb 6
+load_dotenv()
+
+# %% ../nbs/00_core.ipynb 7
 def get_api_key(
     key:str=None # Mistral API key
     ):
@@ -23,11 +27,11 @@ def get_api_key(
     if not key: raise ValueError("MISTRAL_API_KEY not found")
     return key
 
-# %% ../nbs/00_core.ipynb 7
+# %% ../nbs/00_core.ipynb 8
 ocr_model = "mistral-ocr-latest"
 ocr_endpoint = "/v1/ocr"
 
-# %% ../nbs/00_core.ipynb 10
+# %% ../nbs/00_core.ipynb 11
 def upload_pdf(
     path:str, # Path to PDF file
     key:str=None # Mistral API key
@@ -38,7 +42,7 @@ def upload_pdf(
     uploaded = c.files.upload(file=dict(file_name=path.stem, content=path.read_bytes()), purpose="ocr")
     return c.files.get_signed_url(file_id=uploaded.id).url, c
 
-# %% ../nbs/00_core.ipynb 15
+# %% ../nbs/00_core.ipynb 16
 def create_batch_entry(
     path:str, # Path to PDF file, 
     url:str, # Mistral signed URL
@@ -50,7 +54,7 @@ def create_batch_entry(
     if not cid: cid = path.stem
     return dict(custom_id=cid, body=dict(document=dict(type="document_url", document_url=url), include_image_base64=inc_img))
 
-# %% ../nbs/00_core.ipynb 17
+# %% ../nbs/00_core.ipynb 18
 def prep_pdf_batch(
     path:str, # Path to PDF file, 
     cid:str=None, # Custom ID (by default using the file name without extention)
@@ -61,7 +65,7 @@ def prep_pdf_batch(
     url, c = upload_pdf(path, key)
     return create_batch_entry(path, url, cid, inc_img), c
 
-# %% ../nbs/00_core.ipynb 21
+# %% ../nbs/00_core.ipynb 22
 def submit_batch(
     entries:list[dict], # List of batch entries, 
     c:Mistral=None, # Mistral client, 
@@ -75,7 +79,7 @@ def submit_batch(
         batch_data = c.files.upload(file=dict(file_name="batch.jsonl", content=open(f.name, "rb")), purpose="batch")
     return c.batch.jobs.create(input_files=[batch_data.id], model=model, endpoint=endpoint)
 
-# %% ../nbs/00_core.ipynb 24
+# %% ../nbs/00_core.ipynb 25
 def wait_for_job(
     job:dict, # Job dict, 
     c:Mistral=None, # Mistral client, 
@@ -87,7 +91,7 @@ def wait_for_job(
         job = c.batch.jobs.get(job_id=job.id)
     return job
 
-# %% ../nbs/00_core.ipynb 26
+# %% ../nbs/00_core.ipynb 27
 def download_results(
     job:dict, # Job dict, 
     c:Mistral=None # Mistral client
@@ -96,7 +100,7 @@ def download_results(
     content = c.files.download(file_id=job.output_file).read().decode('utf-8')
     return [json.loads(line) for line in content.strip().split('\n') if line]
 
-# %% ../nbs/00_core.ipynb 31
+# %% ../nbs/00_core.ipynb 32
 def save_images(
     page:dict, # Page dict, 
     img_dir:str='img' # Directory to save images
@@ -107,7 +111,7 @@ def save_images(
             img_bytes = base64.b64decode(img['image_base64'].split(',')[1])
             Image.open(BytesIO(img_bytes)).save(img_dir / img['id'])
 
-# %% ../nbs/00_core.ipynb 32
+# %% ../nbs/00_core.ipynb 33
 def save_page(
     page:dict, # Page dict, 
     out_dir:str, # Directory to save page
@@ -119,7 +123,7 @@ def save_page(
         img_dir.mkdir(exist_ok=True)
         save_images(page, img_dir)
 
-# %% ../nbs/00_core.ipynb 34
+# %% ../nbs/00_core.ipynb 35
 def save_pages(
     ocr_resp:dict, # OCR response, 
     out_dir:str, # Directory to save pages, 
@@ -132,7 +136,7 @@ def save_pages(
     for page in ocr_resp['pages']: save_page(page, out_dir, img_dir)
     return out_dir
 
-# %% ../nbs/00_core.ipynb 40
+# %% ../nbs/00_core.ipynb 41
 def _get_paths(path:str) -> list[Path]:
     "Get list of PDFs from file or folder"
     path = Path(path)
@@ -143,7 +147,7 @@ def _get_paths(path:str) -> list[Path]:
         return pdfs
     raise ValueError(f"Path not found: {path}")
 
-# %% ../nbs/00_core.ipynb 41
+# %% ../nbs/00_core.ipynb 42
 def _prep_batch(pdfs:list[Path], inc_img:bool=True, key:str=None) -> tuple[list[dict], Mistral]:
     "Prepare batch entries for list of PDFs"
     entries, c = [], None
@@ -152,7 +156,7 @@ def _prep_batch(pdfs:list[Path], inc_img:bool=True, key:str=None) -> tuple[list[
         entries.append(entry)
     return entries, c
 
-# %% ../nbs/00_core.ipynb 42
+# %% ../nbs/00_core.ipynb 43
 def _run_batch(entries:list[dict], c:Mistral, poll_interval:int=2) -> list[dict]:
     "Submit batch, wait for completion, and download results"
     job = submit_batch(entries, c)
@@ -160,7 +164,7 @@ def _run_batch(entries:list[dict], c:Mistral, poll_interval:int=2) -> list[dict]
     if job.status != 'SUCCESS': raise Exception(f"Job failed with status: {job.status}")
     return download_results(job, c)
 
-# %% ../nbs/00_core.ipynb 43
+# %% ../nbs/00_core.ipynb 44
 def ocr(
     path:str, # Path to PDF file or folder,
     out_dir:str='md', # Directory to save markdown pages, 
