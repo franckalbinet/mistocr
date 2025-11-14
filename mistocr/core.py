@@ -11,11 +11,8 @@ from fastcore.all import *
 import os, re, json, time, base64, tempfile, logging
 from io import BytesIO
 from pathlib import Path
-from dotenv import load_dotenv
 from PIL import Image
 from mistralai import Mistral
-from tqdm import tqdm
-from tqdm import tqdm
 
 # %% ../nbs/00_core.ipynb 6
 def get_api_key(
