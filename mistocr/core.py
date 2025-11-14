@@ -4,7 +4,7 @@
 
 # %% auto 0
 __all__ = ['ocr_model', 'ocr_endpoint', 'get_api_key', 'upload_pdf', 'create_batch_entry', 'prep_pdf_batch', 'submit_batch',
-           'wait_for_job', 'download_results', 'save_images', 'save_page', 'save_pages', 'ocr']
+           'wait_for_job', 'download_results', 'save_images', 'save_page', 'save_pages', 'ocr', 'read_pgs']
 
 # %% ../nbs/00_core.ipynb 3
 from fastcore.all import *
@@ -42,7 +42,7 @@ def upload_pdf(
 def create_batch_entry(
     path:str, # Path to PDF file, 
     url:str, # Mistral signed URL
-    cid:str=None, # Custom ID (by default using the file name without extention)
+    cid:str=None, # Custom ID (by default using the file name without extension)
     inc_img:bool=True # Include image in response
     ) -> dict[str, str | dict[str, str | bool]]: # Batch entry dict
     "Create a batch entry dict for OCR"
@@ -173,3 +173,17 @@ def ocr(
     entries, c = _prep_batch(pdfs, inc_img, key)
     results = _run_batch(entries, c, poll_interval)
     return L([save_pages(r['response']['body'], out_dir, r['custom_id']) for r in results])
+
+# %% ../nbs/00_core.ipynb 48
+def read_pgs(
+    path:str, # OCR output directory, 
+    pg:int=None, # Page number
+    ) -> str:
+    "Read specific page or all pages from OCR output directory"
+    path = Path(path)
+    if pg:
+        pg_path = path / f'page_{pg}.md'
+        if not pg_path.exists(): raise ValueError(f"Page {pg} not found")
+        return pg_path.read_text()
+    pgs = sorted(path.glob('page_*.md'), key=lambda p: int(p.stem.split('_')[1]))
+    return '\n\n'.join([p.read_text() for p in pgs])
