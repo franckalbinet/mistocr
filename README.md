@@ -15,10 +15,11 @@ for large document sets.
 **Cost savings**: Batch OCR mode reduces costs from \$1/1000 pages to
 \$0.50/1000 pages - a 50% reduction compared to synchronous processing.
 
-**Simplicity**: A single `ocr()` function handles everything -
-uploading, batch submission, polling for completion, and saving results
-as markdown with extracted images. Process one PDF or an entire folder
-with the same simple interface.
+**Simplicity**: A single
+[`ocr()`](https://franckalbinet.github.io/mistocr/core.html#ocr)
+function handles everything - uploading, batch submission, polling for
+completion, and saving results as markdown with extracted images.
+Process one PDF or an entire folder with the same simple interface.
 
 **Organized output**: Each PDF is automatically saved to its own folder
 with pages as separate markdown files and images in an `img` subfolder,
@@ -41,57 +42,60 @@ $ pip install mistocr
 
 ## How to use
 
+### Basic usage
+
+Process a single PDF:
+
 ``` python
 from mistocr.core import ocr
+
+fname = 'files/test/attention-is-all-you-need.pdf'
+result = ocr(fname)
 ```
 
-- **Process a single PDF:**
-
-<!-- -->
-
-    fname = 'files/test/attention-is-all-you-need.pdf'
-    result = ocr(fname)
-
-``` python
-```
-
-    files/test/md/attention-is-all-you-need:
-    img/        page_11.md  page_14.md  page_3.md  page_6.md  page_9.md
-    page_1.md   page_12.md  page_15.md  page_4.md  page_7.md
-    page_10.md  page_13.md  page_2.md   page_5.md  page_8.md
-
-    files/test/md/attention-is-all-you-need/img:
-    img-0.jpeg  img-1.jpeg  img-2.jpeg  img-3.jpeg  img-4.jpeg
-
-- **Or process an entire folder:**
+Or process an entire folder:
 
 ``` python
 results = ocr('files/test')
 ```
 
+### Output structure
+
+Each PDF is saved to its own folder with pages as separate markdown
+files and images in an `img` subfolder:
+
+    files/test/md/
+    ├── attention-is-all-you-need/
+    │   ├── img/
+    │   │   ├── img-0.jpeg
+    │   │   ├── img-1.jpeg
+    │   │   └── ...
+    │   ├── page_1.md
+    │   ├── page_2.md
+    │   └── ...
+    └── resnet/
+        ├── img/
+        └── ...
+
+### Reading results
+
+Read all pages from a processed PDF:
+
 ``` python
+from mistocr.core import read_pgs
+
+text = read_pgs('files/test/md/attention-is-all-you-need')
 ```
 
-    files/test/md:
-    attention-is-all-you-need/  resnet/
+Or read a specific page:
 
-    files/test/md/attention-is-all-you-need:
-    img/        page_11.md  page_14.md  page_3.md  page_6.md  page_9.md
-    page_1.md   page_12.md  page_15.md  page_4.md  page_7.md
-    page_10.md  page_13.md  page_2.md   page_5.md  page_8.md
+``` python
+text = read_pgs('files/test/md/attention-is-all-you-need', 10)
+```
 
-    files/test/md/attention-is-all-you-need/img:
-    img-0.jpeg  img-1.jpeg  img-2.jpeg  img-3.jpeg  img-4.jpeg
+### Customization
 
-    files/test/md/resnet:
-    img/       page_10.md  page_12.md  page_3.md  page_5.md  page_7.md  page_9.md
-    page_1.md  page_11.md  page_2.md   page_4.md  page_6.md  page_8.md
-
-    files/test/md/resnet/img:
-    img-0.jpeg  img-2.jpeg  img-4.jpeg  img-6.jpeg
-    img-1.jpeg  img-3.jpeg  img-5.jpeg
-
-- **Customize the output:**
+Customize output directory, image inclusion, and polling interval:
 
 ``` python
 results = ocr('files/test', out_dir='output', inc_img=False, poll_interval=5)
