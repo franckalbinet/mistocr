@@ -177,13 +177,10 @@ def ocr(
 # %% ../nbs/00_core.ipynb 48
 def read_pgs(
     path:str, # OCR output directory, 
-    pg:int=None, # Page number
-    ) -> str:
+    join:bool=True # Join pages into single string
+    ) -> str|list[str]: # Joined string or list of page contents
     "Read specific page or all pages from OCR output directory"
     path = Path(path)
-    if pg:
-        pg_path = path / f'page_{pg}.md'
-        if not pg_path.exists(): raise ValueError(f"Page {pg} not found")
-        return pg_path.read_text()
     pgs = sorted(path.glob('page_*.md'), key=lambda p: int(p.stem.split('_')[1]))
-    return '\n\n'.join([p.read_text() for p in pgs])
+    contents = L([p.read_text() for p in pgs])
+    return '\n\n'.join(contents) if join else contents
