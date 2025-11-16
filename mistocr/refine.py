@@ -5,15 +5,6 @@
 # %% auto 0
 __all__ = ['get_hdgs']
 
-# %% ../nbs/01_refine.ipynb 4
-from .core import read_pgs
-from re import sub, findall, MULTILINE
-
-# Dev only
-import sys
-sys.path.append('../../..')
-from ctx_utils import *
-
 # %% ../nbs/01_refine.ipynb 11
 def get_hdgs(
     md:str # Markdown file string
