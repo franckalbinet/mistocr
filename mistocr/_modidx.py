@@ -19,4 +19,5 @@ d = { 'settings': { 'branch': 'main',
                               'mistocr.core.save_pages': ('core.html#save_pages', 'mistocr/core.py'),
                               'mistocr.core.submit_batch': ('core.html#submit_batch', 'mistocr/core.py'),
                               'mistocr.core.upload_pdf': ('core.html#upload_pdf', 'mistocr/core.py'),
-                              'mistocr.core.wait_for_job': ('core.html#wait_for_job', 'mistocr/core.py')}}}
+                              'mistocr.core.wait_for_job': ('core.html#wait_for_job', 'mistocr/core.py')},
+            'mistocr.refine': {'mistocr.refine.get_hdgs': ('refine.html#get_hdgs', 'mistocr/refine.py')}}}
