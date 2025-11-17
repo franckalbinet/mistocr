@@ -43,27 +43,30 @@ prompt_fix_hdgs = """Fix markdown heading hierarchy errors while preserving the 
 
 INPUT FORMAT: Each heading is prefixed with its index number (e.g., "0. # Title")
 
-RULES - Only fix these errors:
-1. **Level jumps**: Headings can only increase by one # at a time
-   - Wrong: 0. # Title → 1. #### Abstract
-   - Fixed: 0. # Title → 1. ## Abstract
+RULES - Apply these fixes in order:
 
-2. **Numbering inconsistency**: Subsection numbers must be one level deeper
-   - Wrong: 4. ## 3. Section → 5. ## 3.1 Subsection
-   - Fixed: 4. ## 3. Section → 5. ### 3.1 Subsection
+1. **Single H1 rule**: Documents must have exactly ONE # heading (the title/main heading)
+   - All other headings should be ## or deeper
 
-3. **Preserve working structure**: If sections are consistently marked, keep it
+2. **Infer depth from numbering patterns**: If headings contain section numbers, deeper nesting means deeper heading level
+   - Parent section (e.g., "1", "2", "A") should be shallower than child (e.g., "1.1", "2.a", "A.1")
+   - Child section should be one # deeper than parent
+   - Works with any numbering: "1/1.1/1.1.1", "A/A.1/A.1.a", "I/I.A/I.A.1", etc.
 
-4. **Decreasing levels is OK**: Going from ### to ## is valid for new sections
+3. **Level jumps**: Headings can only increase by one # at a time when moving deeper
+   - Wrong: ## Section → ##### Subsection
+   - Fixed: ## Section → ### Subsection
+
+4. **Decreasing levels is OK**: Moving back up the hierarchy (### to ##) is valid for new sections
 
 OUTPUT: Return a Python dictionary mapping index to corrected heading (without the index prefix).
-Only include entries that need changes. Example: {{1: '## Abstract', 15: '### PASCAL VOC'}}
+Only include entries that need changes.
 
 Headings to analyze:
 {headings_list}
 """
 
-# %% ../nbs/01_refine.ipynb 18
+# %% ../nbs/01_refine.ipynb 16
 def fix_hdg_hierarchy(
     hdgs: list[str], # List of markdown headings
     prompt: str=prompt_fix_hdgs, # Prompt to use
@@ -79,7 +82,7 @@ def fix_hdg_hierarchy(
         )
     return json.loads(r.choices[0].message.content)['corrections']
 
-# %% ../nbs/01_refine.ipynb 21
+# %% ../nbs/01_refine.ipynb 19
 def mk_fixes_lut(
     hdgs: list[str], # List of markdown headings
     model: str='claude-sonnet-4-5', # Model to use
@@ -89,7 +92,7 @@ def mk_fixes_lut(
     fixes = fix_hdg_hierarchy(hdgs, model, api_key)
     return {hdgs[int(k)]:v for k,v in fixes.items()}
 
-# %% ../nbs/01_refine.ipynb 24
+# %% ../nbs/01_refine.ipynb 22
 def apply_hdg_fixes(
     p:str, # Page to fix
     lut_fixes: dict[str, str], # Lookup table of fixes
@@ -99,7 +102,7 @@ def apply_hdg_fixes(
     for old in get_hdgs(p): p = p.replace(old, lut_fixes.get(old, old) + (f' .... page {pg}' if pg else ''))
     return p
 
-# %% ../nbs/01_refine.ipynb 27
+# %% ../nbs/01_refine.ipynb 25
 def fix_md_hdgs(
     src:str, # Source directory with markdown pages
     model:str='claude-sonnet-4-5', # Model
