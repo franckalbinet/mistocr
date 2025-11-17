@@ -44,7 +44,7 @@ We revisit the PASCAL VOC dataset based on the above model. With the single mode
 | our ensemble (ILSVRC'15) | $\mathbf{6 3 . 6}$ | $\mathbf{6 2 . 1}$ |
 
 Table 12. Our results (mAP, \%) on the ImageNet detection dataset. Our detection system is Faster R-CNN [32] with the improvements in Table 9, using ResNet-101.
-we achieve $85.6 \% \mathrm{mAP}$ on PASCAL VOC 2007 (Table 10) and $83.8 \%$ on PASCAL VOC 2012 (Table 11) ${ }^{6}$. The result on PASCAL VOC 2012 is 10 points higher than the previous state-of-the-art result [6].
+we achieve $85.6 \%$ mAP on PASCAL VOC 2007 (Table 10) and $83.8 \%$ on PASCAL VOC 2012 (Table 11) ${ }^{6}$. The result on PASCAL VOC 2012 is 10 points higher than the previous state-of-the-art result [6].
 
 ### ImageNet Detection .... page 11
 

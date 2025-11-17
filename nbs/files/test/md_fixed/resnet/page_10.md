@@ -1,4 +1,4 @@
-## A. Object Detection Baselines .... page 10
+## Appendix A. Object Detection Baselines .... page 10
 
 In this section we introduce our detection method based on the baseline Faster R-CNN [32] system. The models are initialized by the ImageNet classification models, and then fine-tuned on the object detection data. We have experimented with ResNet-50/101 at the time of the ILSVRC \& COCO 2015 detection competitions.
 
@@ -18,7 +18,7 @@ The MS COCO dataset [26] involves 80 object categories. We evaluate the PASCAL V
 
 Table 8 shows the results on the MS COCO validation set. ResNet-101 has a $6 \%$ increase of mAP@[.5, .95] over VGG-16, which is a $28 \%$ relative improvement, solely contributed by the features learned by the better network. Remarkably, the mAP@[.5, .95]'s absolute increase (6.0\%) is nearly as big as mAP@.5's (6.9\%). This suggests that a deeper network can improve both recognition and localization.
 
-## B. Object Detection Improvements .... page 10
+## Appendix B. Object Detection Improvements .... page 10
 
 For completeness, we report the improvements made for the competitions. These improvements are based on deep features and thus should benefit from residual learning.
 
