@@ -10,7 +10,7 @@
 Table 13. Localization error (\%) on the ImageNet validation. In the column of "LOC error on GT class" ([41]), the ground truth class is used. In the "testing" column, "1-crop" denotes testing on a center crop of $224 \times 224$ pixels, "dense" denotes dense (fully convolutional) and multi-scale testing.
 $58.8 \% \mathrm{mAP}$ and our ensemble of 3 models has $62.1 \% \mathrm{mAP}$ on the DET test set (Table 12). This result won the 1st place in the ImageNet detection task in ILSVRC 2015, surpassing the second place by $\mathbf{8 . 5}$ points (absolute).
 
-## C. ImageNet Localization ... page 12
+## Appendix C. ImageNet Localization ... page 12
 
 The ImageNet Localization (LOC) task [36] requires to classify and localize the objects. Following [40, 41], we assume that the image-level classifiers are first adopted for predicting the class labels of an image, and the localization algorithm only accounts for predicting bounding boxes based on the predicted classes. We adopt the "per-class regression" (PCR) strategy [40, 41], learning a bounding box regressor for each class. We pre-train the networks for ImageNet classification and then fine-tune them for localization. We train networks on the provided 1000-class ImageNet training set.
 

@@ -33,7 +33,7 @@ Using validation data. Next we use the $80 \mathrm{k}+40 \mathrm{k}$ trainval se
 
 Ensemble. In Faster R-CNN, the system is designed to learn region proposals and also object classifiers, so an ensemble can be used to boost both tasks. We use an ensemble for proposing regions, and the union set of proposals are processed by an ensemble of per-region classifiers. Table 9 shows our result based on an ensemble of 3 networks. The mAP is $59.0 \%$ and $37.4 \%$ on the test-dev set. This result won the 1st place in the detection task in COCO 2015.
 
-## PASCAL VOC ... page 11
+### PASCAL VOC ... page 11
 
 We revisit the PASCAL VOC dataset based on the above model. With the single model on the COCO dataset ( $55.7 \%$ $\mathrm{mAP} @ .5$ in Table 9), we fine-tune this model on the PASCAL VOC sets. The improvements of box refinement, context, and multi-scale testing are also adopted. By doing so
 
@@ -46,7 +46,7 @@ We revisit the PASCAL VOC dataset based on the above model. With the single mode
 Table 12. Our results (mAP, \%) on the ImageNet detection dataset. Our detection system is Faster R-CNN [32] with the improvements in Table 9, using ResNet-101.
 we achieve $85.6 \%$ mAP on PASCAL VOC 2007 (Table 10) and $83.8 \%$ on PASCAL VOC 2012 (Table 11) ${ }^{6}$. The result on PASCAL VOC 2012 is 10 points higher than the previous state-of-the-art result [6].
 
-## ImageNet Detection ... page 11
+### ImageNet Detection ... page 11
 
 The ImageNet Detection (DET) task involves 200 object categories. The accuracy is evaluated by mAP@.5. Our object detection algorithm for ImageNet DET is the same as that for MS COCO in Table 9. The networks are pretrained on the 1000-class ImageNet classification set, and are fine-tuned on the DET data. We split the validation set into two parts (val1/val2) following [8]. We fine-tune the detection models using the DET training set and the val1 set. The val2 set is used for validation. We do not use other ILSVRC 2015 data. Our single model with ResNet-101 has
 
