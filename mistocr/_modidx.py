@@ -21,9 +21,11 @@ d = { 'settings': { 'branch': 'main',
                               'mistocr.core.upload_pdf': ('core.html#upload_pdf', 'mistocr/core.py'),
                               'mistocr.core.wait_for_job': ('core.html#wait_for_job', 'mistocr/core.py')},
             'mistocr.refine': { 'mistocr.refine.HeadingCorrections': ('refine.html#headingcorrections', 'mistocr/refine.py'),
+                                'mistocr.refine.add_pg_hdgs': ('refine.html#add_pg_hdgs', 'mistocr/refine.py'),
                                 'mistocr.refine.apply_hdg_fixes': ('refine.html#apply_hdg_fixes', 'mistocr/refine.py'),
                                 'mistocr.refine.fix_hdg_hierarchy': ('refine.html#fix_hdg_hierarchy', 'mistocr/refine.py'),
                                 'mistocr.refine.fix_md_hdgs': ('refine.html#fix_md_hdgs', 'mistocr/refine.py'),
                                 'mistocr.refine.fmt_hdgs_idx': ('refine.html#fmt_hdgs_idx', 'mistocr/refine.py'),
                                 'mistocr.refine.get_hdgs': ('refine.html#get_hdgs', 'mistocr/refine.py'),
-                                'mistocr.refine.mk_fixes_lut': ('refine.html#mk_fixes_lut', 'mistocr/refine.py')}}}
+                                'mistocr.refine.mk_fixes_lut': ('refine.html#mk_fixes_lut', 'mistocr/refine.py'),
+                                'mistocr.refine.read_pgs_pg': ('refine.html#read_pgs_pg', 'mistocr/refine.py')}}}
