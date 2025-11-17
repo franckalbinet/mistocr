@@ -115,7 +115,6 @@ def apply_hdg_fixes(
     lut_fixes: dict[str, str], # Lookup table of fixes
     ) -> str: # Page with fixes applied
     "Apply the fixes to the page"
-    #for old in get_hdgs(p): p = p.replace(old, lut_fixes.get(old, old) + (f' .... page {pg}' if pg else ''))
     for old in get_hdgs(p): p = p.replace(old, lut_fixes.get(old, old))
     return p
 
@@ -128,6 +127,7 @@ def fix_md_hdgs(
     "Fix heading hierarchy in markdown document"
     src_path,dst_path = Path(src),Path(dst) if dst else Path(src)
     if dst_path != src_path: dst_path.mkdir(parents=True, exist_ok=True)
-    lut = mk_fixes_lut(get_hdgs(read_pgs(src_path)), model)
-    for i,p in enumerate(read_pgs_pg(src_path), 1):
+    pgs_with_pg = read_pgs_pg(src_path)
+    lut = mk_fixes_lut(L([get_hdgs(pg) for pg in pgs_with_pg]).concat(), model)
+    for i,p in enumerate(pgs_with_pg, 1):
         (dst_path/f'page_{i}.md').write_text(apply_hdg_fixes(p, lut))
