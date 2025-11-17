@@ -110,11 +110,11 @@ def save_images(
 # %% ../nbs/00_core.ipynb 32
 def save_page(
     page:dict, # Page dict, 
-    out_dir:str, # Directory to save page
+    dst:str, # Directory to save page
     img_dir:str='img' # Directory to save images
     ) -> None:
     "Save single page markdown and images"
-    (out_dir / f"page_{page['index']+1}.md").write_text(page['markdown'])
+    (dst / f"page_{page['index']+1}.md").write_text(page['markdown'])
     if page.get('images'):
         img_dir.mkdir(exist_ok=True)
         save_images(page, img_dir)
@@ -122,15 +122,15 @@ def save_page(
 # %% ../nbs/00_core.ipynb 34
 def save_pages(
     ocr_resp:dict, # OCR response, 
-    out_dir:str, # Directory to save pages, 
+    dst:str, # Directory to save pages, 
     cid:str # Custom ID
     ) -> Path: # Output directory
     "Save markdown pages and images from OCR response to output directory"
-    out_dir = Path(out_dir) / cid
-    out_dir.mkdir(parents=True, exist_ok=True)
-    img_dir = out_dir / 'img'
-    for page in ocr_resp['pages']: save_page(page, out_dir, img_dir)
-    return out_dir
+    dst = Path(dst) / cid
+    dst.mkdir(parents=True, exist_ok=True)
+    img_dir = dst / 'img'
+    for page in ocr_resp['pages']: save_page(page, dst, img_dir)
+    return dst
 
 # %% ../nbs/00_core.ipynb 40
 def _get_paths(path:str) -> list[Path]:
@@ -163,7 +163,7 @@ def _run_batch(entries:list[dict], c:Mistral, poll_interval:int=2) -> list[dict]
 # %% ../nbs/00_core.ipynb 43
 def ocr(
     path:str, # Path to PDF file or folder,
-    out_dir:str='md', # Directory to save markdown pages, 
+    dst:str='md', # Directory to save markdown pages, 
     inc_img:bool=True, # Include image in response, 
     key:str=None, # API key, 
     poll_interval:int=2 # Poll interval in seconds
@@ -172,7 +172,7 @@ def ocr(
     pdfs = _get_paths(path)
     entries, c = _prep_batch(pdfs, inc_img, key)
     results = _run_batch(entries, c, poll_interval)
-    return L([save_pages(r['response']['body'], out_dir, r['custom_id']) for r in results])
+    return L([save_pages(r['response']['body'], dst, r['custom_id']) for r in results])
 
 # %% ../nbs/00_core.ipynb 48
 def read_pgs(
