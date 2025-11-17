@@ -63,9 +63,10 @@ Headings to analyze:
 {headings_list}
 """
 
-# %% ../nbs/01_refine.ipynb 16
+# %% ../nbs/01_refine.ipynb 18
 def fix_hdg_hierarchy(
     hdgs: list[str], # List of markdown headings
+    prompt: str=prompt_fix_hdgs, # Prompt to use
     model: str='claude-sonnet-4-5', # Model to use
     api_key: str=os.getenv('ANTHROPIC_API_KEY') # API key
     ) -> dict[int, str]: # Dictionary of index → corrected heading
@@ -78,7 +79,7 @@ def fix_hdg_hierarchy(
         )
     return json.loads(r.choices[0].message.content)['corrections']
 
-# %% ../nbs/01_refine.ipynb 19
+# %% ../nbs/01_refine.ipynb 21
 def mk_fixes_lut(
     hdgs: list[str], # List of markdown headings
     model: str='claude-sonnet-4-5', # Model to use
@@ -88,7 +89,7 @@ def mk_fixes_lut(
     fixes = fix_hdg_hierarchy(hdgs, model, api_key)
     return {hdgs[int(k)]:v for k,v in fixes.items()}
 
-# %% ../nbs/01_refine.ipynb 22
+# %% ../nbs/01_refine.ipynb 24
 def apply_hdg_fixes(
     p:str, # Page to fix
     lut_fixes: dict[str, str], # Lookup table of fixes
@@ -98,7 +99,7 @@ def apply_hdg_fixes(
     for old in get_hdgs(p): p = p.replace(old, lut_fixes.get(old, old) + (f' .... page {pg}' if pg else ''))
     return p
 
-# %% ../nbs/01_refine.ipynb 25
+# %% ../nbs/01_refine.ipynb 27
 def fix_md_hdgs(
     src:str, # Source directory with markdown pages
     model:str='claude-sonnet-4-5', # Model
