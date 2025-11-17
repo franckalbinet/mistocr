@@ -89,7 +89,7 @@ def mk_fixes_lut(
     api_key: str=os.getenv('ANTHROPIC_API_KEY') # API key
     ) -> dict[str, str]: # Dictionary of old → new heading
     "Make a lookup table of fixes"
-    fixes = fix_hdg_hierarchy(hdgs, model, api_key)
+    fixes = fix_hdg_hierarchy(hdgs, model=model, api_key=api_key)
     return {hdgs[int(k)]:v for k,v in fixes.items()}
 
 # %% ../nbs/01_refine.ipynb 22
