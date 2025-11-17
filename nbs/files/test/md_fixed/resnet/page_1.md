@@ -1,16 +1,16 @@
-# Deep Residual Learning for Image Recognition  .... page 1
+# Deep Residual Learning for Image Recognition  ... page 1
 
 Kaiming He Xiangyu Zhang Shaoqing Ren Jian Sun<br>Microsoft Research<br>\{kahe, v-xiangz, v-shren, jiansun\}@microsoft.com
 
 
-## Abstract .... page 1
+#### Abstract ... page 1
 
 Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth. On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers- $8 \times$ deeper than VGG nets [41] but still having lower complexity. An ensemble of these residual nets achieves $3.57 \%$ error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task. We also present analysis on CIFAR-10 with 100 and 1000 layers.
 
 The depth of representations is of central importance for many visual recognition tasks. Solely due to our extremely deep representations, we obtain a $28 \%$ relative improvement on the COCO object detection dataset. Deep residual nets are foundations of our submissions to ILSVRC \& COCO 2015 competitions ${ }^{1}$, where we also won the 1st places on the tasks of ImageNet detection, ImageNet localization, COCO detection, and COCO segmentation.
 
 
-## 1. Introduction .... page 1
+## 1. Introduction ... page 1
 
 Deep convolutional neural networks [22, 21] have led to a series of breakthroughs for image classification [21, 50, 40]. Deep networks naturally integrate low/mid/highlevel features [50] and classifiers in an end-to-end multilayer fashion, and the "levels" of features can be enriched by the number of stacked layers (depth). Recent evidence $[41,44]$ reveals that network depth is of crucial importance, and the leading results $[41,44,13,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
 

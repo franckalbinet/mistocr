@@ -1,8 +1,8 @@
 way networks have not demonstrated accuracy gains with extremely increased depth (e.g., over 100 layers).
 
-## 3. Deep Residual Learning .... page 3
+## 3. Deep Residual Learning ... page 3
 
-### 3.1. Residual Learning .... page 3
+### 3.1. Residual Learning ... page 3
 
 Let us consider $\mathcal{H}(\mathbf{x})$ as an underlying mapping to be fit by a few stacked layers (not necessarily the entire net), with $\mathbf{x}$ denoting the inputs to the first of these layers. If one hypothesizes that multiple nonlinear layers can asymptotically approximate complicated functions ${ }^{2}$, then it is equivalent to hypothesize that they can asymptotically approximate the residual functions, i.e., $\mathcal{H}(\mathbf{x})-\mathbf{x}$ (assuming that the input and output are of the same dimensions). So rather than expect stacked layers to approximate $\mathcal{H}(\mathbf{x})$, we explicitly let these layers approximate a residual function $\mathcal{F}(\mathbf{x}):=\mathcal{H}(\mathbf{x})-\mathbf{x}$. The original function thus becomes $\mathcal{F}(\mathbf{x})+\mathbf{x}$. Although both forms should be able to asymptotically approximate the desired functions (as hypothesized), the ease of learning might be different.
 
@@ -10,7 +10,7 @@ This reformulation is motivated by the counterintuitive phenomena about the degr
 
 In real cases, it is unlikely that identity mappings are optimal, but our reformulation may help to precondition the problem. If the optimal function is closer to an identity mapping than to a zero mapping, it should be easier for the solver to find the perturbations with reference to an identity mapping, than to learn the function as a new one. We show by experiments (Fig. 7) that the learned residual functions in general have small responses, suggesting that identity mappings provide reasonable preconditioning.
 
-### 3.2. Identity Mapping by Shortcuts .... page 3
+### 3.2. Identity Mapping by Shortcuts ... page 3
 
 We adopt residual learning to every few stacked layers. A building block is shown in Fig. 2. Formally, in this paper we consider a building block defined as:
 
@@ -36,7 +36,7 @@ The form of the residual function $\mathcal{F}$ is flexible. Experiments in this
 
 We also note that although the above notations are about fully-connected layers for simplicity, they are applicable to convolutional layers. The function $\mathcal{F}\left(\mathbf{x},\left\{W_{i}\right\}\right)$ can represent multiple convolutional layers. The element-wise addition is performed on two feature maps, channel by channel.
 
-### 3.3. Network Architectures .... page 3
+### 3.3. Network Architectures ... page 3
 
 We have tested various plain/residual nets, and have observed consistent phenomena. To provide instances for discussion, we describe two models for ImageNet as follows.
 

@@ -1,4 +1,4 @@
-## References .... page 9
+## References ... page 9
 
 [1] Y. Bengio, P. Simard, and P. Frasconi. Learning long-term dependencies with gradient descent is difficult. IEEE Transactions on Neural Networks, 5(2):157-166, 1994.
 [2] C. M. Bishop. Neural networks for pattern recognition. Oxford university press, 1995.

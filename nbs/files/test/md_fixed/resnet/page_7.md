@@ -6,7 +6,7 @@ The 50/101/152-layer ResNets are more accurate than the 34-layer ones by conside
 
 Comparisons with State-of-the-art Methods. In Table 4 we compare with the previous best single-model results. Our baseline 34-layer ResNets have achieved very competitive accuracy. Our 152-layer ResNet has a single-model top-5 validation error of $4.49 \%$. This single-model result outperforms all previous ensemble results (Table 5). We combine six models of different depth to form an ensemble (only with two 152-layer ones at the time of submitting). This leads to $\mathbf{3 . 5 7 \%}$ top-5 error on the test set (Table 5). This entry won the 1st place in ILSVRC 2015.
 
-### 4.2. CIFAR-10 and Analysis .... page 7
+### 4.2. CIFAR-10 and Analysis ... page 7
 
 We conducted more studies on the CIFAR-10 dataset [20], which consists of 50k training images and 10k testing images in 10 classes. We present experiments trained on the training set and evaluated on the test set. Our focus is on the behaviors of extremely deep networks, but not on pushing the state-of-the-art results, so we intentionally use simple architectures as follows.
 
