@@ -12,13 +12,14 @@ from .core import read_pgs
 from re import sub, findall, MULTILINE
 from pydantic import BaseModel
 from lisette.core import completion
+from typing import Callable
 import os
 import json
 
-# %% ../nbs/01_refine.ipynb 8
+# %% ../nbs/01_refine.ipynb 7
 def get_hdgs(
     md:str # Markdown file string
-    ):
+    ) -> L: # L of strings
     "Return the markdown headings"
     # Sanitize removing '#' in python snippet if any
     md = sub(r'```[\s\S]*?```', '', md)
@@ -26,15 +27,20 @@ def get_hdgs(
 
 
 
-# %% ../nbs/01_refine.ipynb 9
-def add_pg_hdgs(md, n):
-    "Add page number to all headings in markdown"
+# %% ../nbs/01_refine.ipynb 8
+def add_pg_hdgs(
+    md:str, # Markdown file string, 
+    n:int # Page number
+    ) -> str: # Markdown file string
+    "Add page number to all headings in page markdown"
     md = sub(r'```[\s\S]*?```', '', md)
     def repl(m): return m.group(0) + f' ... page {n}'
     return sub(r'^#{1,6} .+$', repl, md, flags=MULTILINE)
 
-# %% ../nbs/01_refine.ipynb 11
-def read_pgs_pg(path):
+# %% ../nbs/01_refine.ipynb 12
+def read_pgs_pg(
+    path:str # Path to the markdown file
+    ) -> L: # List of markdown pages
     "Read all pages of a markdown file and add page numbers to all headings"
     pgs = read_pgs(path, join=False)
     return L([add_pg_hdgs(pg, n) for n, pg in enumerate(pgs, 1)]).concat()
@@ -83,33 +89,35 @@ Headings to analyze:
 """
 
 
-# %% ../nbs/01_refine.ipynb 21
+# %% ../nbs/01_refine.ipynb 22
 def fix_hdg_hierarchy(
     hdgs: list[str], # List of markdown headings
-    prompt: str=prompt_fix_hdgs, # Prompt to use
+    prompt: str=None, # Prompt to use
     model: str='claude-sonnet-4-5', # Model to use
-    api_key: str=os.getenv('ANTHROPIC_API_KEY') # API key
+    api_key: str=None # API key
     ) -> dict[int, str]: # Dictionary of index → corrected heading
     "Fix the heading hierarchy"
-    r = completion(
-        model=model, 
-        messages=[{"role": "user", "content": prompt_fix_hdgs.format(headings_list=fmt_hdgs_idx(hdgs))}], 
-        response_format=HeadingCorrections, 
-        api_key=api_key
-        )
+    if api_key is None: api_key = os.getenv('ANTHROPIC_API_KEY')
+    if prompt is None: prompt = prompt_fix_hdgs
+    prompt = prompt.format(headings_list=fmt_hdgs_idx(hdgs))
+    r = completion(model=model, messages=[{"role": "user", "content": prompt}], response_format=HeadingCorrections, api_key=api_key)
     return json.loads(r.choices[0].message.content)['corrections']
 
-# %% ../nbs/01_refine.ipynb 24
+
+# %% ../nbs/01_refine.ipynb 25
+@delegates(fix_hdg_hierarchy)
 def mk_fixes_lut(
     hdgs: list[str], # List of markdown headings
     model: str='claude-sonnet-4-5', # Model to use
-    api_key: str=os.getenv('ANTHROPIC_API_KEY') # API key
+    api_key: str=None, # API key
+    **kwargs
     ) -> dict[str, str]: # Dictionary of old → new heading
     "Make a lookup table of fixes"
-    fixes = fix_hdg_hierarchy(hdgs, model=model, api_key=api_key)
+    if api_key is None: api_key = os.getenv('ANTHROPIC_API_KEY')
+    fixes = fix_hdg_hierarchy(hdgs, model=model, api_key=api_key, **kwargs)
     return {hdgs[int(k)]:v for k,v in fixes.items()}
 
-# %% ../nbs/01_refine.ipynb 27
+# %% ../nbs/01_refine.ipynb 28
 def apply_hdg_fixes(
     p:str, # Page to fix
     lut_fixes: dict[str, str], # Lookup table of fixes
@@ -118,16 +126,18 @@ def apply_hdg_fixes(
     for old in get_hdgs(p): p = p.replace(old, lut_fixes.get(old, old))
     return p
 
-# %% ../nbs/01_refine.ipynb 30
+# %% ../nbs/01_refine.ipynb 31
+@delegates(mk_fixes_lut)
 def fix_md_hdgs(
     src:str, # Source directory with markdown pages
     model:str='claude-sonnet-4-5', # Model
     dst:str=None, # Destination directory (None=overwrite)
+    **kwargs
 ):
     "Fix heading hierarchy in markdown document"
     src_path,dst_path = Path(src),Path(dst) if dst else Path(src)
     if dst_path != src_path: dst_path.mkdir(parents=True, exist_ok=True)
     pgs_with_pg = read_pgs_pg(src_path)
-    lut = mk_fixes_lut(L([get_hdgs(pg) for pg in pgs_with_pg]).concat(), model)
+    lut = mk_fixes_lut(L([get_hdgs(pg) for pg in pgs_with_pg]).concat(), model, **kwargs)
     for i,p in enumerate(pgs_with_pg, 1):
         (dst_path/f'page_{i}.md').write_text(apply_hdg_fixes(p, lut))
