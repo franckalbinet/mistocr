@@ -1,4 +1,37 @@
 ![img-0.jpeg](img-0.jpeg)
+AI-generated image description:
+___
+This is an architectural diagram of a Transformer model, showing both the encoder (left) and decoder (right) components. 
+
+The encoder (left side) processes inputs through:
+- Input Embedding layer at the bottom
+- Positional Encoding (added via ⊕ symbol)
+- N× stacked blocks, each containing:
+  - Masked Multi-Head Attention (orange)
+  - Add & Norm layer (yellow)
+  - Feed Forward layer (blue)
+  - Another Add & Norm layer (yellow)
+- Residual connections shown as curved arrows around each sub-layer
+
+The decoder (right side) processes outputs (shifted right) through:
+- Output Embedding layer
+- Positional Encoding (added via ⊕ symbol)
+- N× stacked blocks, each containing:
+  - Masked Multi-Head Attention (orange)
+  - Add & Norm layer (yellow)
+  - Multi-Head Attention that receives input from encoder (orange)
+  - Add & Norm layer (yellow)
+  - Feed Forward layer (blue)
+  - Add & Norm layer (yellow)
+- Residual connections around each sub-layer
+
+The decoder output flows through:
+- Linear layer (gray)
+- Softmax layer (green)
+- Final Output Probabilities
+
+This diagram illustrates the classic "Attention is All You Need" Transformer architecture, showing the parallel processing structure, residual connections, and the flow of information from inputs to output probabilities.
+___
 
 Figure 1: The Transformer - model architecture.
 
