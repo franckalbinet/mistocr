@@ -175,7 +175,7 @@ def ocr_pdf(
     results = _run_batch(entries, c, poll_interval)
     return L([save_pages(r['response']['body'], dst, r['custom_id']) for r in results])
 
-# %% ../nbs/00_core.ipynb 48
+# %% ../nbs/00_core.ipynb 47
 def read_pgs(
     path:str, # OCR output directory, 
     join:bool=True # Join pages into single string
