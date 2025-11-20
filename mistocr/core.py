@@ -4,7 +4,7 @@
 
 # %% auto 0
 __all__ = ['ocr_model', 'ocr_endpoint', 'get_api_key', 'upload_pdf', 'create_batch_entry', 'prep_pdf_batch', 'submit_batch',
-           'wait_for_job', 'download_results', 'save_images', 'save_page', 'save_pages', 'ocr', 'read_pgs']
+           'wait_for_job', 'download_results', 'save_images', 'save_page', 'save_pages', 'ocr_pdf', 'read_pgs']
 
 # %% ../nbs/00_core.ipynb 3
 from fastcore.all import *
@@ -79,10 +79,11 @@ def submit_batch(
 def wait_for_job(
     job:dict, # Job dict, 
     c:Mistral=None, # Mistral client, 
-    poll_interval:int=10 # Poll interval in seconds
+    poll_interval:int=1 # Poll interval in seconds
     ) -> dict: # Job dict (with status)  
     "Poll job until completion and return final job status"
     while job.status in ["QUEUED", "RUNNING"]:
+        print(f'Mistral batch job status: {job.status}')
         time.sleep(poll_interval)
         job = c.batch.jobs.get(job_id=job.id)
     return job
@@ -161,7 +162,7 @@ def _run_batch(entries:list[dict], c:Mistral, poll_interval:int=2) -> list[dict]
     return download_results(job, c)
 
 # %% ../nbs/00_core.ipynb 43
-def ocr(
+def ocr_pdf(
     path:str, # Path to PDF file or folder,
     dst:str='md', # Directory to save markdown pages, 
     inc_img:bool=True, # Include image in response, 
