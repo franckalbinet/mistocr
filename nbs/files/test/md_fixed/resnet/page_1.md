@@ -15,26 +15,6 @@ The depth of representations is of central importance for many visual recognitio
 Deep convolutional neural networks [22, 21] have led to a series of breakthroughs for image classification [21, 50, 40]. Deep networks naturally integrate low/mid/highlevel features [50] and classifiers in an end-to-end multilayer fashion, and the "levels" of features can be enriched by the number of stacked layers (depth). Recent evidence $[41,44]$ reveals that network depth is of crucial importance, and the leading results $[41,44,13,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
 
 [^0]![img-0.jpeg](img-0.jpeg)
-AI-generated image description:
-___
-This figure contains two side-by-side line graphs comparing the performance of 56-layer and 20-layer neural networks during training. 
-
-Left panel: Shows "training error (%)" on the y-axis (ranging from 0 to 20%) versus "iter. (1e4)" on the x-axis (ranging from 0 to 6). The 56-layer network (red line) maintains higher training error around 18-20% initially, then drops sharply around iteration 3e4 to stabilize around 6-8%. The 20-layer network (yellow/olive line) starts around 20% and decreases more gradually and consistently to reach approximately 2-3% by iteration 6e4.
-
-Right panel: Shows "test error (%)" on the y-axis (same scale) versus "iter. (1e4)" on the x-axis (same range). Both networks show similar patterns to their training curves but with the test errors remaining higher. The 56-layer network (red) stabilizes around 14-16% after its drop, while the 20-layer network (yellow/olive) decreases more smoothly to around 10-11%.
-
-This visualization demonstrates a degradation problem where the deeper 56-layer network performs worse than the shallower 20-layer network, both in training and test error, which is counterintuitive to the expectation that deeper networks should perform better.
-___
-AI-generated image description:
-___
-This figure contains two side-by-side line graphs comparing the performance of 56-layer and 20-layer neural networks during training. 
-
-Left panel: Shows "training error (%)" on the y-axis (ranging from 0 to 20%) versus "iter. (1e4)" on the x-axis (ranging from 0 to 6). The 56-layer network (red line) maintains higher training error around 18-20% initially, then drops sharply around iteration 3e4 to stabilize around 6-8%. The 20-layer network (yellow/olive line) starts around 20% and decreases more gradually and consistently to reach approximately 2-3% by iteration 6e4.
-
-Right panel: Shows "test error (%)" on the y-axis (same scale) versus "iter. (1e4)" on the x-axis (same range). Both networks show similar patterns to their training curves but with the test errors remaining higher. The 56-layer network (red) stabilizes around 14-16% after its drop, while the 20-layer network (yellow/olive) decreases more smoothly to around 10-11%.
-
-This visualization demonstrates a degradation problem where the deeper 56-layer network performs worse than the shallower 20-layer network, both in training and test error, which is counterintuitive to the expectation that deeper networks should perform better.
-___
 
 Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.
 greatly benefited from very deep models.
