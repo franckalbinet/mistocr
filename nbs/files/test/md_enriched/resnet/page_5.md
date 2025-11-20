@@ -20,6 +20,16 @@
 Table 1. Architectures for ImageNet. Building blocks are shown in brackets (see also Fig. 5), with the numbers of blocks stacked. Downsampling is performed by conv3_1, conv4_1, and conv5_1 with a stride of 2.
 
 ![img-3.jpeg](img-3.jpeg)
+AI-generated image description:
+___
+This image contains two side-by-side line graphs comparing training error rates for different neural network architectures over training iterations.
+
+Left panel: Shows plain neural networks (plain-18 in cyan and plain-34 in dark red) with error rates on the y-axis (20-60%) and iterations (0-50 in units of 1e4) on the x-axis. The plain-18 network converges to approximately 31% error, while the plain-34 network converges to approximately 33% error. Both show rapid initial decrease followed by plateaus. Lighter colored lines in the background appear to show validation or test error curves.
+
+Right panel: Shows ResNet architectures (ResNet-18 in cyan and ResNet-34 in dark red) with the same axis scales. Both networks show similar convergence patterns but the deeper ResNet-34 achieves lower final error (approximately 27%) compared to ResNet-18 (approximately 30%). 
+
+Key observation: This comparison demonstrates the degradation problem in plain networks where deeper networks (34-layer) perform worse than shallower ones (18-layer), while ResNet architectures successfully overcome this issue, with the deeper network achieving better performance. The annotations "18-layer" and "34-layer" label the respective curves in each panel.
+___
 
 Figure 4. Training on **ImageNet**. Thin curves denote training error, and bold curves denote validation error of the center crops. Left: plain networks of 18 and 34 layers. Right: ResNets of 18 and 34 layers. In this plot, the residual networks have no extra parameter compared to their plain counterparts.
 

@@ -11,7 +11,7 @@
 | ResNet-101 | 21.75 | 6.05 |
 | ResNet-152 | $\mathbf{2 1 . 4 3}$ | $\mathbf{5 . 7 1}$ |
 
-Table 3. Error rates (\%, 10-crop testing) on ImageNet validation. VGG-16 is based on our test. ResNet-50/101/152 are of option B that only uses projections for increasing dimensions.
+Table 3. Error rates ( $\%$, 10-crop testing) on ImageNet validation. VGG-16 is based on our test. ResNet-50/101/152 are of option B that only uses projections for increasing dimensions.
 
 | method | top-1 err. | top-5 err. |
 | :-- | :--: | :--: |

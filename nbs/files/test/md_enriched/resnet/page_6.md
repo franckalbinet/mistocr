@@ -11,7 +11,7 @@
 | ResNet-101 | 21.75 | 6.05 |
 | ResNet-152 | $\mathbf{2 1 . 4 3}$ | $\mathbf{5 . 7 1}$ |
 
-Table 3. Error rates (\%, 10-crop testing) on ImageNet validation. VGG-16 is based on our test. ResNet-50/101/152 are of option B that only uses projections for increasing dimensions.
+Table 3. Error rates ( $\%$, 10-crop testing) on ImageNet validation. VGG-16 is based on our test. ResNet-50/101/152 are of option B that only uses projections for increasing dimensions.
 
 | method | top-1 err. | top-5 err. |
 | :-- | :--: | :--: |
@@ -45,6 +45,29 @@ Last, we also note that the 18-layer plain/residual nets are comparably accurate
 
 Identity vs. Projection Shortcuts. We have shown that
 ![img-4.jpeg](img-4.jpeg)
+AI-generated image description:
+___
+This is a technical architectural diagram showing two parallel residual block structures, commonly found in neural network architectures like ResNet. 
+
+Left block (64-d):
+- Input: 64-dimensional feature map
+- First layer: 3x3 convolution with 64 filters, followed by ReLU activation
+- Second layer: 3x3 convolution with 64 filters
+- Skip connection: Direct path from input bypassing the two convolutional layers
+- Addition operation (⊕): Combines the skip connection with the processed features
+- Final ReLU activation after the addition
+
+Right block (256-d):
+- Input: 256-dimensional feature map
+- First layer: 1x1 convolution with 64 filters (dimensionality reduction), followed by ReLU
+- Second layer: 3x3 convolution with 64 filters, followed by ReLU
+- Third layer: 1x1 convolution with 256 filters (dimensionality expansion)
+- Skip connection: Direct path from input
+- Addition operation (⊕): Combines the skip connection with the processed features
+- Final ReLU activation after the addition
+
+The right block represents a bottleneck architecture that reduces computational cost by first reducing dimensions with 1x1 convolutions, processing with 3x3 convolutions, then expanding back to the original dimension. Both blocks implement the residual learning framework where the network learns residual functions with reference to the layer inputs.
+___
 
 Figure 5. A deeper residual function $\mathcal{F}$ for ImageNet. Left: a building block (on $56 \times 56$ feature maps) as in Fig. 3 for ResNet34. Right: a "bottleneck" building block for ResNet-50/101/152.
 parameter-free, identity shortcuts help with training. Next we investigate projection shortcuts (Eqn.(2)). In Table 3 we compare three options: (A) zero-padding shortcuts are used for increasing dimensions, and all shortcuts are parameterfree (the same as Table 2 and Fig. 4 right); (B) projection shortcuts are used for increasing dimensions, and other shortcuts are identity; and (C) all shortcuts are projections.

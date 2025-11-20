@@ -219,8 +219,8 @@ def add_descs_to_pg(
     descs:dict # Dictionary mapping image filenames to their descriptions
 ) -> str: # Page markdown with descriptions added
     "Add AI-generated descriptions to images in page"
-    for link in findall(r'\[\^\d+\]!\[[^\]]*\]\([^)]+\)', pg):
-        fname = findall(r'\(([^)]+)\)', link)[0]
+    for link in re.findall(r'!\[[^\]]*\]\([^)]+\)', pg):
+        fname = re.findall(r'\(([^)]+)\)', link)[0]
         if fname in descs: pg = pg.replace(link, f"{link}\nAI-generated image description:\n___\n{descs[fname]['description']}\n___")
     return pg
 
@@ -246,6 +246,8 @@ async def add_img_descs(
     "Describe all images in markdown document and insert descriptions inline"
     src_path,dst_path = Path(src),Path(dst) if dst else Path(src)
     if dst_path != src_path: dst_path.mkdir(parents=True, exist_ok=True)
+    src_imgs = src_path/img_folder
+    if src_imgs.exists() and dst_path != src_path: shutil.copytree(src_imgs, dst_path/img_folder, dirs_exist_ok=True)
     desc_file = src_path/'img_descriptions.json'
     if desc_file.exists() and not force:
         if progress: print(f"Loading existing descriptions from {desc_file}")
@@ -258,6 +260,6 @@ async def add_img_descs(
         if progress: print(f"Saved descriptions to {desc_file}")
     pgs = read_pgs(src_path, join=False)
     if progress: print(f"Adding descriptions to {len(pgs)} pages...")
-    enriched = add_descs_to_pgs(pgs, descs)
+    enriched = [add_descs_to_pg(pg, descs) for pg in pgs]
     for i,pg in enumerate(enriched, 1): (dst_path/f'page_{i}.md').write_text(pg)
     if progress: print(f"Done! Enriched pages saved to {dst_path}")

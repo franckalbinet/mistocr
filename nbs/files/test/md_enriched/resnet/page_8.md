@@ -1,8 +1,30 @@
 ![img-5.jpeg](img-5.jpeg)
+AI-generated image description:
+___
+This figure contains three line graphs showing training error rates over iterations for different neural network architectures. 
+
+Left panel: Shows error rates for plain networks (plain-20, plain-32, plain-44, plain-56) over approximately 6×10^4 iterations. The curves show varying convergence patterns, with the 56-layer and 20-layer networks achieving lower error rates around 10-13%, while deeper networks show less stable convergence.
+
+Middle panel: Displays error rates for ResNet architectures (ResNet-20, ResNet-32, ResNet-44, ResNet-56, ResNet-110) over the same iteration range. All ResNet variants show better convergence than plain networks, with error rates dropping to approximately 5-7%. The curves are more stable and show consistent improvement across all depths, with annotations indicating "20-layer" and "110-layer" performance levels.
+
+Right panel: Shows a comparison between residual-110 and residual-1202 networks over iterations. Both curves stabilize around 5-7% error, with residual-1202 (purple line) showing slightly higher error than residual-110 (black line).
+
+The x-axis for all panels represents iterations (×10^4), and the y-axis represents error percentage. This visualization demonstrates the effectiveness of residual learning in training deeper networks compared to plain architectures.
+___
 
 Figure 6. Training on **CIFAR-10**. Dashed lines denote training error, and bold lines denote testing error. **Left**: plain networks. The error of plain-110 is higher than 60% and not displayed. **Middle**: ResNets. **Right**: ResNets with 110 and 1202 layers.
 
 ![img-6.jpeg](img-6.jpeg)
+AI-generated image description:
+___
+This image contains two line graphs comparing standard deviation (std) across layer indices for different neural network architectures (plain-20, plain-56, ResNet-20, ResNet-56, and ResNet-110).
+
+Top graph: Shows std values plotted against layer index in original order (0-110). The lines show varying patterns with plain-56 (dashed red line) exhibiting high volatility and peaks around layers 20-40, while ResNet-110 (solid black line) remains relatively stable around std=1 throughout all layers. Plain-20 (solid yellow) and ResNet-20 (solid orange) show moderate fluctuations, and ResNet-56 (solid red) displays intermediate behavior.
+
+Bottom graph: Shows the same data but with layers sorted by magnitude. Here, all architectures show a general decreasing trend from left to right. Plain-56 starts highest (std≈3) and decreases most steeply, while ResNet-110 shows the most gradual decline and remains closest to std=1. This visualization reveals that when sorted by magnitude, deeper ResNets maintain more consistent standard deviations across layers compared to plain networks.
+
+The graphs appear to analyze gradient flow or activation statistics across network depth, demonstrating ResNet's advantage in maintaining stable signal propagation compared to plain architectures.
+___
 
 Figure 7. Standard deviations (std) of layer responses on CIFAR-10. The responses are the outputs of each 3×3 layer, after BN and before nonlinearity. **Top**: the layers are shown in their original order. **Bottom**: the responses are ranked in descending order.
 
