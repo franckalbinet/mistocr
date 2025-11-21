@@ -8,9 +8,9 @@ mentioned in passing, as if it’s a trivial step. Practice shows it’s far
 from it. Poorly converted PDFs mean garbage-in-garbage-out for
 downstream AI-system (RAG, …).
 
-When Mistral AI released their [state-of-the-art OCR
-model](https://mistral.ai/fr/news/mistral-ocr) in March 2025, it opened
-new possibilities for large-scale document processing. While
+When [Mistral AI](https://mistral.ai) released their [state-of-the-art
+OCR model](https://mistral.ai/fr/news/mistral-ocr) in March 2025, it
+opened new possibilities for large-scale document processing. While
 alternatives like [datalab.to](https://www.datalab.to) and
 [docling.ai](https://www.docling.ai) offer viable solutions, Mistral OCR
 delivers exceptional accuracy at a compelling price point.
@@ -163,8 +163,11 @@ await add_img_descs('ocr_output/doc1',
                     delay=0.5)    # Shorter delay between calls
 ```
 
-For complete control over each pipeline step, see the [core](link),
-[refine](link), and [pipeline](link) module documentation.
+For complete control over each pipeline step, see the
+[core](https://fr.anckalbi.net/mistocr/core.html),
+[refine](https://fr.anckalbi.net/mistocr/refine.html), and
+[pipeline](https://fr.anckalbi.net/mistocr/pipeline.html) module
+documentation.
 
 ## Known Limitations & Future Work
 
