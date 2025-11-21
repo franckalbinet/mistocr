@@ -15,16 +15,6 @@ The depth of representations is of central importance for many visual recognitio
 Deep convolutional neural networks [22, 21] have led to a series of breakthroughs for image classification [21, 50, 40]. Deep networks naturally integrate low/mid/highlevel features [50] and classifiers in an end-to-end multilayer fashion, and the "levels" of features can be enriched by the number of stacked layers (depth). Recent evidence $[41,44]$ reveals that network depth is of crucial importance, and the leading results $[41,44,13,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
 
 [^0]![img-0.jpeg](img-0.jpeg)
-AI-generated image description:
-___
-This figure contains two side-by-side line graphs comparing training and test error rates for neural networks with different layer depths (56-layer and 20-layer) over training iterations.
-
-Left panel (Training Error): Shows training error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). The 56-layer network (red line) starts around 19% error and maintains high error (~18-19%) for approximately 30,000 iterations before dropping sharply to around 6-7%. The 20-layer network (yellow/olive line) starts around 20% and decreases more gradually and consistently, reaching approximately 3% by 60,000 iterations.
-
-Right panel (Test Error): Shows test error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). Both networks follow similar patterns to their training curves. The 56-layer network (red) maintains higher error (~18-20%) before dropping to around 13-14%. The 20-layer network (yellow/olive) decreases more smoothly from ~20% to approximately 10-11%.
-
-The visualization demonstrates that the deeper 56-layer network exhibits optimization difficulties, showing delayed convergence compared to the shallower 20-layer network, which achieves better performance on both training and test sets. This is a classic illustration of the degradation problem in deep neural networks.
-___
 
 Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.
 greatly benefited from very deep models.

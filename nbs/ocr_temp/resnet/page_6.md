@@ -45,30 +45,6 @@ Last, we also note that the 18-layer plain/residual nets are comparably accurate
 
 Identity vs. Projection Shortcuts. We have shown that
 ![img-4.jpeg](img-4.jpeg)
-AI-generated image description:
-___
-This is a technical architectural diagram showing two parallel residual block structures, commonly found in neural network architectures like ResNets. 
-
-Left block (64-d):
-- Input passes through a 3x3 convolution with 64 filters
-- Followed by ReLU activation
-- Another 3x3 convolution with 64 filters
-- Skip connection (curved arrow) bypasses these layers
-- Output is added (⊕ symbol) with the skip connection
-- Final ReLU activation
-
-Right block (256-d):
-- Input passes through a 1x1 convolution with 64 filters
-- ReLU activation
-- 3x3 convolution with 64 filters
-- ReLU activation
-- 1x1 convolution with 256 filters
-- Skip connection bypasses all layers
-- Output is added (⊕ symbol) with the skip connection
-- Final ReLU activation
-
-The left structure represents a basic residual block for maintaining dimensionality (64 dimensions), while the right structure shows a bottleneck design that changes dimensionality from 64 to 256 dimensions. Both implement the residual learning framework where the skip connection allows gradients to flow directly through the network.
-___
 
 Figure 5. A deeper residual function $\mathcal{F}$ for ImageNet. Left: a building block (on $56 \times 56$ feature maps) as in Fig. 3 for ResNet34. Right: a "bottleneck" building block for ResNet-50/101/152.
 parameter-free, identity shortcuts help with training. Next we investigate projection shortcuts (Eqn.(2)). In Table 3 we compare three options: (A) zero-padding shortcuts are used for increasing dimensions, and all shortcuts are parameterfree (the same as Table 2 and Fig. 4 right); (B) projection shortcuts are used for increasing dimensions, and other shortcuts are identity; and (C) all shortcuts are projections.
