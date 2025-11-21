@@ -4,6 +4,6 @@ project:
 website:
   title: "mistocr"
   site-url: "https://franckalbinet.github.io/mistocr"
-  description: "Simple batch OCR for PDFs using Mistral's state-of-the-art vision model"
+  description: "Batch OCR for PDFs with heading restoration and visual content integration"
   repo-branch: main
   repo-url: "https://github.com/franckalbinet/mistocr"
