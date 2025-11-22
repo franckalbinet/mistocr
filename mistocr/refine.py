@@ -197,8 +197,8 @@ async def describe_imgs(
     imgs: list[Path], # List of image file paths to describe
     model: str = 'claude-sonnet-4-5', # Model to use for image description
     prompt: str = describe_img_prompt, # Prompt template for description
-    semaphore: int = 2, # Max concurrent API requests
-    delay: float = 1 # Delay in seconds between requests
+    semaphore: int = 10, # Max concurrent API requests
+    delay: float = 0.1 # Delay in seconds between requests
 ) -> dict[str, dict]: # Dict mapping filename to parsed description
     "Describe multiple images in parallel with rate limiting"
     sem = Semaphore(semaphore)
