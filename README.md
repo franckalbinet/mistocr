@@ -36,11 +36,13 @@ fundamental challenges that raw OCR output leaves unsolved:
 **In short**: Complete PDF OCR with heading hierarchy fixes and image
 descriptions for RAG and LLM pipelines.
 
-**Want to see mistocr in action?** This
-[tutorial](https://share.solve.it.com/d/97f75412ca949af76a5945b4dfc443c7)
-demonstrates real-world PDF processing and shows how clean markdown
-enables structure-aware navigation through long documents—letting you
-find exactly what you need, fast.
+> [!NOTE]
+>
+> **Want to see mistocr in action?** This
+> [tutorial](https://share.solve.it.com/d/97f75412ca949af76a5945b4dfc443c7)
+> demonstrates real-world PDF processing and shows how clean markdown
+> enables structure-aware navigation through long documents—letting you
+> find exactly what you need, fast.
 
 ## Get Started
 
