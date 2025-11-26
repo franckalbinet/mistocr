@@ -4,9 +4,9 @@
 
 # %% auto 0
 __all__ = ['prompt_fix_hdgs', 'describe_img_prompt', 'get_hdgs', 'add_pg_hdgs', 'read_pgs_pg', 'fmt_hdgs_idx',
-           'HeadingCorrections', 'fix_hdg_hierarchy', 'mk_fixes_lut', 'apply_hdg_fixes', 'fix_hdgs', 'ImgDescription',
-           'describe_img', 'limit', 'parse_r', 'describe_imgs', 'save_img_descs', 'add_descs_to_pg', 'add_descs_to_pgs',
-           'add_img_descs']
+           'HeadingCorrection', 'HeadingCorrections', 'fix_hdg_hierarchy', 'mk_fixes_lut', 'apply_hdg_fixes',
+           'fix_hdgs', 'ImgDescription', 'describe_img', 'limit', 'parse_r', 'describe_imgs', 'save_img_descs',
+           'add_descs_to_pg', 'add_descs_to_pgs', 'add_img_descs']
 
 # %% ../nbs/01_refine.ipynb 3
 from fastcore.all import *
@@ -59,8 +59,12 @@ def fmt_hdgs_idx(
 
 
 # %% ../nbs/01_refine.ipynb 18
+class HeadingCorrection(BaseModel):
+    index: int
+    corrected: str
+
 class HeadingCorrections(BaseModel):
-    corrections: dict[int, str]  # index → corrected heading
+    corrections: list[HeadingCorrection]
 
 # %% ../nbs/01_refine.ipynb 20
 prompt_fix_hdgs = """Fix markdown heading hierarchy errors while preserving the document's intended structure.
@@ -85,14 +89,15 @@ RULES - Apply these fixes in order:
 
 4. **Decreasing levels is OK**: Moving back up the hierarchy (### to ##) is valid for new sections
 
-OUTPUT: Return a Python dictionary mapping index to corrected heading (without the index prefix).
+OUTPUT: Return a list of corrections, where each correction has:
+- index: the heading's index number
+- corrected: the fixed heading text (without the index prefix)
 IMPORTANT: Preserve the " ... page N" suffix in all corrected headings.
-Only include entries that need changes.
+Only include headings that need changes.
 
 Headings to analyze:
 {headings_list}
 """
-
 
 # %% ../nbs/01_refine.ipynb 22
 def fix_hdg_hierarchy(
@@ -106,7 +111,8 @@ def fix_hdg_hierarchy(
     if prompt is None: prompt = prompt_fix_hdgs
     prompt = prompt.format(headings_list=fmt_hdgs_idx(hdgs))
     r = completion(model=model, messages=[{"role": "user", "content": prompt}], response_format=HeadingCorrections, api_key=api_key)
-    return json.loads(r.choices[0].message.content)['corrections']
+    fixes =  json.loads(r.choices[0].message.content)['corrections']
+    return {o['index']: o['corrected'] for o in fixes}
 
 
 # %% ../nbs/01_refine.ipynb 25
@@ -120,7 +126,7 @@ def mk_fixes_lut(
     "Make a lookup table of fixes"
     if api_key is None: api_key = os.getenv('ANTHROPIC_API_KEY')
     fixes = fix_hdg_hierarchy(hdgs, model=model, api_key=api_key, **kwargs)
-    return {hdgs[int(k)]:v for k,v in fixes.items()}
+    return {hdgs[k]:v for k,v in fixes.items()}
 
 # %% ../nbs/01_refine.ipynb 28
 def apply_hdg_fixes(
