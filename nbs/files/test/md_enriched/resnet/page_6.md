@@ -47,26 +47,7 @@ Identity vs. Projection Shortcuts. We have shown that
 ![img-4.jpeg](img-4.jpeg)
 AI-generated image description:
 ___
-This is a technical architectural diagram showing two parallel residual block structures, commonly found in neural network architectures like ResNet. 
-
-Left block (64-d):
-- Input: 64-dimensional feature map
-- First layer: 3x3 convolution with 64 filters, followed by ReLU activation
-- Second layer: 3x3 convolution with 64 filters
-- Skip connection: Direct path from input bypassing the two convolutional layers
-- Addition operation (⊕): Combines the skip connection with the processed features
-- Final ReLU activation after the addition
-
-Right block (256-d):
-- Input: 256-dimensional feature map
-- First layer: 1x1 convolution with 64 filters (dimensionality reduction), followed by ReLU
-- Second layer: 3x3 convolution with 64 filters, followed by ReLU
-- Third layer: 1x1 convolution with 256 filters (dimensionality expansion)
-- Skip connection: Direct path from input
-- Addition operation (⊕): Combines the skip connection with the processed features
-- Final ReLU activation after the addition
-
-The right block represents a bottleneck architecture that reduces computational cost by first reducing dimensions with 1x1 convolutions, processing with 3x3 convolutions, then expanding back to the original dimension. Both blocks implement the residual learning framework where the network learns residual functions with reference to the layer inputs.
+Neural network architecture diagram showing two parallel residual blocks. The left block processes a 64-dimensional input through two 3x3 convolutional layers with 64 filters each, connected by ReLU activations, with a skip connection that adds the input to the output before a final ReLU. The right block processes a 256-dimensional input through a 1x1 convolution (64 filters), followed by a 3x3 convolution (64 filters), then a 1x1 convolution (256 filters), with ReLU activations between layers and a skip connection adding the original input to the final output before ReLU. Both blocks demonstrate residual learning with identity mappings, commonly used in ResNet-style architectures. The left block maintains dimensionality while the right block uses bottleneck design with dimension reduction and expansion.
 ___
 
 Figure 5. A deeper residual function $\mathcal{F}$ for ImageNet. Left: a building block (on $56 \times 56$ feature maps) as in Fig. 3 for ResNet34. Right: a "bottleneck" building block for ResNet-50/101/152.

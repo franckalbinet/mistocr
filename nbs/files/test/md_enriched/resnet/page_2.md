@@ -1,15 +1,7 @@
 ![img-1.jpeg](img-1.jpeg)
 AI-generated image description:
 ___
-This is a technical diagram illustrating a residual block architecture, commonly used in deep neural networks (ResNets). The diagram shows:
-
-1. **Input flow**: An input 'x' enters the block from the top
-2. **Main path (F(x))**: The input passes through two sequential weight layers with ReLU activation functions between them, computing a transformation F(x)
-3. **Skip connection (identity path)**: A curved arrow on the right shows the original input 'x' bypassing the weight layers via an identity mapping
-4. **Addition operation**: A circled plus symbol (⊕) indicates element-wise addition where the transformed features F(x) are added to the original input x
-5. **Output**: The final output is F(x) + x, which then passes through another ReLU activation
-
-This residual connection architecture allows gradients to flow directly through the network during backpropagation and helps address the vanishing gradient problem in deep networks. The diagram clearly labels each component and uses arrows to show the direction of data flow through the block.
+This is a technical diagram illustrating a residual block architecture commonly used in deep neural networks (ResNet). The diagram shows the flow of data through two weight layers with ReLU activation functions. The input 'x' enters from the top, passes through a weight layer followed by ReLU activation, then through another weight layer. The key feature is the skip connection (identity mapping) shown by the curved arrow on the right, which adds the original input 'x' directly to the output of the second weight layer (F(x)) before the final ReLU activation. This produces the final output F(x) + x. This residual connection architecture helps address the vanishing gradient problem in deep networks by allowing gradients to flow directly through the identity path during backpropagation.
 ___
 
 Figure 2. Residual learning: a building block.

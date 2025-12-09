@@ -220,6 +220,12 @@ async def add_img_descs(
     src_path,dst_path = Path(src),Path(dst) if dst else Path(src)
     if dst_path != src_path: dst_path.mkdir(parents=True, exist_ok=True)
     src_imgs = src_path/img_folder
+    
+    # Check if image folder exists
+    if not src_imgs.exists():
+        if progress: print(f"No images to describe in the document (no '{img_folder}' folder found)")
+        return
+    
     if src_imgs.exists() and dst_path != src_path: shutil.copytree(src_imgs, dst_path/img_folder, dirs_exist_ok=True)
     desc_file = src_path/'img_descriptions.json'
     if desc_file.exists() and not force:
@@ -236,3 +242,4 @@ async def add_img_descs(
     enriched = [add_descs_to_pg(pg, descs) for pg in pgs]
     for i,pg in enumerate(enriched, 1): (dst_path/f'page_{i}.md').write_text(pg)
     if progress: print(f"Done! Enriched pages saved to {dst_path}")
+

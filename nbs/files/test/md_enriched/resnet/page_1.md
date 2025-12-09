@@ -17,13 +17,7 @@ Deep convolutional neural networks [22, 21] have led to a series of breakthrough
 [^0]![img-0.jpeg](img-0.jpeg)
 AI-generated image description:
 ___
-This figure contains two side-by-side line graphs comparing training and test error rates for neural networks with different layer depths (56-layer and 20-layer) over training iterations.
-
-Left panel (Training Error): Shows training error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). The 56-layer network (red line) starts around 19% error and maintains higher error throughout training, ending around 6-7%. The 20-layer network (yellow/olive line) starts around 20% error and decreases more smoothly to approximately 3-4% by the end of training.
-
-Right panel (Test Error): Shows test error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). Both networks show similar patterns to training error. The 56-layer network (red line) maintains higher test error around 14-15%, while the 20-layer network (yellow/olive line) achieves lower test error around 10-11%.
-
-Key observation: The deeper 56-layer network exhibits worse performance (higher error) than the shallower 20-layer network on both training and test sets, suggesting a degradation problem in very deep networks. This visualization likely illustrates the motivation for residual learning architectures that address the degradation problem in deep neural networks.
+Two side-by-side line graphs comparing training error (left) and test error (right) versus iteration number for neural networks with different layer depths. Both graphs show performance over approximately 60,000 iterations (6×10^4). The y-axis represents error percentage (0-20%), and the x-axis shows iterations in scientific notation. Two lines are plotted in each graph: a red line representing a 56-layer network and a yellow/green line representing a 20-layer network. In the training error plot, both networks show decreasing error over time, with the 20-layer network achieving lower training error (~2-3%) compared to the 56-layer network (~5-6%). In the test error plot, both networks show similar patterns with the 20-layer network achieving slightly better test error (~10-11%) compared to the 56-layer network (~13-14%). This visualization demonstrates the degradation problem in deep neural networks where deeper networks (56-layer) perform worse than shallower ones (20-layer) on both training and test sets.
 ___
 
 Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.

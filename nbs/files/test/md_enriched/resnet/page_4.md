@@ -1,17 +1,7 @@
 ![img-2.jpeg](img-2.jpeg)
 AI-generated image description:
 ___
-This is a technical architectural diagram comparing three deep convolutional neural network architectures: VGG-19, 34-layer plain, and 34-layer residual networks. 
-
-The diagram shows:
-
-1. **VGG-19 (leftmost)**: A sequential architecture with progressively deeper layers, starting with 3x3 conv layers with 64 filters at output size 224, increasing to 128 filters at size 112, then 256 filters at size 56, 512 filters at sizes 28 and 14, ending with fully connected (fc) layers of 4096 and 1000 neurons at output size 1. Pooling operations (/2) reduce spatial dimensions between stages.
-
-2. **34-layer plain (middle)**: Begins with 7x7 conv with 64 filters and /2 pooling, followed by multiple stacks of 3x3 conv layers. The architecture progresses through stages with 64, 128, 256, and 512 filters, with downsampling (/2) at stage transitions. Ends with average pooling and fc 1000.
-
-3. **34-layer residual (rightmost)**: Similar structure to the plain network but incorporates skip connections (shown as curved arrows) that bypass blocks of layers, implementing residual learning. These connections allow gradients to flow directly through the network, addressing the degradation problem in very deep networks.
-
-The diagram illustrates the evolution from traditional deep networks (VGG) to very deep plain networks and finally to residual networks (ResNet), showing how residual connections enable training of much deeper architectures.
+Architectural comparison diagram showing three deep neural network architectures: VGG-19, 34-layer plain, and 34-layer residual network. The diagram illustrates the layer-by-layer structure with convolutional layers (conv), pooling operations (pool), and fully connected layers (fc). VGG-19 shows a sequential architecture with increasing filter depths (64→128→256→512) and decreasing spatial dimensions (224→112→56→28→14→7→1). The 34-layer plain network shows a deeper architecture with repeated 3x3 convolutions. The 34-layer residual network (rightmost) demonstrates the key innovation of residual connections, shown as curved arrows that skip layers, allowing gradients to flow directly through the network. Each architecture processes input images and produces final outputs through average pooling and fully connected layers (fc 1000 for classification). The residual connections (skip connections) are the distinguishing feature that enables training of very deep networks by addressing the vanishing gradient problem.
 ___
 
 Figure 3. Example network architectures for ImageNet. Left: the VGG-19 model [41] (19.6 billion FLOPs) as a reference. Middle: a plain network with 34 parameter layers (3.6 billion FLOPs). Right: a residual network with 34 parameter layers (3.6 billion FLOPs). The dotted shortcuts increase dimensions. Table 1 shows more details and other variants.

@@ -22,13 +22,7 @@ Table 1. Architectures for ImageNet. Building blocks are shown in brackets (see 
 ![img-3.jpeg](img-3.jpeg)
 AI-generated image description:
 ___
-This image contains two side-by-side line graphs comparing training error rates for different neural network architectures over training iterations.
-
-Left panel: Shows plain neural networks (plain-18 in cyan and plain-34 in dark red) with error rates on the y-axis (20-60%) and iterations (0-50 in units of 1e4) on the x-axis. The plain-18 network converges to approximately 31% error, while the plain-34 network converges to approximately 33% error. Both show rapid initial decrease followed by plateaus. Lighter colored lines in the background appear to show validation or test error curves.
-
-Right panel: Shows ResNet architectures (ResNet-18 in cyan and ResNet-34 in dark red) with the same axis scales. Both networks show similar convergence patterns but the deeper ResNet-34 achieves lower final error (approximately 27%) compared to ResNet-18 (approximately 30%). 
-
-Key observation: This comparison demonstrates the degradation problem in plain networks where deeper networks (34-layer) perform worse than shallower ones (18-layer), while ResNet architectures successfully overcome this issue, with the deeper network achieving better performance. The annotations "18-layer" and "34-layer" label the respective curves in each panel.
+Two side-by-side line graphs comparing training error rates over iterations for plain and ResNet architectures with 18 and 34 layers. Left panel shows plain-18 (cyan) and plain-34 (dark red) networks, while right panel shows ResNet-18 (cyan) and ResNet-34 (dark red) networks. The x-axis represents iterations (×1e4) from 0 to 50, and y-axis shows error percentage from 20% to 60%. Key findings: In plain networks, the deeper 34-layer model performs worse than the 18-layer model, with higher error rates throughout training. In ResNet architectures, the 34-layer model achieves lower error rates than the 18-layer model, demonstrating that residual connections enable effective training of deeper networks. Both architectures show rapid initial error reduction followed by gradual convergence, with lighter colored lines appearing to represent individual training runs or validation curves.
 ___
 
 Figure 4. Training on **ImageNet**. Thin curves denote training error, and bold curves denote validation error of the center crops. Left: plain networks of 18 and 34 layers. Right: ResNets of 18 and 34 layers. In this plot, the residual networks have no extra parameter compared to their plain counterparts.
