@@ -79,11 +79,17 @@ def submit_batch(
 def wait_for_job(
     job:dict, # Job dict, 
     c:Mistral=None, # Mistral client, 
-    poll_interval:int=1 # Poll interval in seconds
+    poll_interval:int=1, # Poll interval in seconds
+    queued_timeout:int=300 # Timeout for QUEUED status in seconds
     ) -> dict: # Job dict (with status)  
     "Poll job until completion and return final job status"
+    queued_time = 0
     while job.status in ["QUEUED", "RUNNING"]:
         print(f'Mistral batch job status: {job.status}')
+        if job.status == "QUEUED":
+            queued_time += poll_interval
+            if queued_time >= queued_timeout:
+                raise TimeoutError(f"Job stayed in QUEUED status for {queued_time}s, exceeding timeout of {queued_timeout}s. Check your balance or Mistral Status.")
         time.sleep(poll_interval)
         job = c.batch.jobs.get(job_id=job.id)
     return job
