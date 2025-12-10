@@ -1,0 +1,17 @@
+The complexity of the JI-HoA and the integrated approach, and the fragility of existing systems in the Horn of Africa countries, leads to the conclusion that ownership and sustainability of the programme cannot be expected after five years of implementation. Important progress has been made, but continued support is needed in terms of capacity-building, but also for wider socio-economic development and security in the four countries in general.
+
+Namely, the vast majority of challenges and barriers to the achievements of the JI-HoA are linked to the context in which it takes place, and to external factors. Capacity-building efforts were undermined by political priorities and staff turnover; referral systems and service provision for migrants and returnees were hindered by a lack of a structure national referral mechanism, well-functioning health and social security systems, and economic support lost value in the face of a deteriorating economic situation and inflation. Activities of the JI were furthermore hindered by civil conflict and security issues. Therefore, the situation of returnees cannot be addressed without simultaneously addressing the wider socio-economic context.
+
+# 5.2. Recommendations 
+
+Based on the conclusions of the evaluation, the evaluation team has designed the following recommendations towards migrant protection, return and reintegration programming.
+
+1. Enhance efforts with national, regional, and local stakeholders to build capacity and ownership (while continuing provision of funding).
+
+The EU-IOM Joint Initiative has put visible effort in building the capacity of national actors to support return and reintegration. However, political priorities did not always ensure ownership and commitment of governments to take the JI results forward. Additionally, turnover of staff has removed trained staff and therefore undone some of the work of the JI in this regard.
+
+Two important steps need to be taken to enhance the capacity and ownership of key stakeholders, which would set the scene for sustainability and impact. Firstly, capacity building should be expanded to a wider scope of persons. This should include the entire relevant organisational departments, ensuring the participation of top and middle management as well as their staff.
+
+Secondly, capacity alone is not sufficient to ensure impact and sustainability of the work on return and reintegration. Therefore, migrant protection, return and reintegration programming should focus also on enhancing ownership and commitment of stakeholders towards these topics. Possible steps include the gradual integration of MRCs with the relevant public sector organizations, or coownership/management of the MRCs by local governments (along with IOM) where some of the employees are funded by the local government. In addition, the migrant protection, return and reintegration programming should continue to support the integration of return and reintegration into policy documents and development plans
+
+However, sustainability and independent work by governments and stakeholders is not something that should be expected in the near future. Therefore, financial resources from donors will still need to be allocated to governments and stakeholders to implement their policies and services for returnees.

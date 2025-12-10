@@ -4,9 +4,9 @@
 
 # %% auto 0
 __all__ = ['prompt_fix_hdgs', 'describe_img_prompt', 'get_hdgs', 'add_pg_hdgs', 'read_pgs_pg', 'fmt_hdgs_idx',
-           'HeadingCorrection', 'HeadingCorrections', 'fix_hdg_hierarchy', 'mk_fixes_lut', 'apply_hdg_fixes',
-           'fix_hdgs', 'ImgDescription', 'describe_img', 'limit', 'parse_r', 'describe_imgs', 'save_img_descs',
-           'add_descs_to_pg', 'add_descs_to_pgs', 'add_img_descs']
+           'HeadingCorrection', 'fix_hdg_hierarchy', 'mk_fixes_lut', 'apply_hdg_fixes', 'fix_hdgs', 'ImgDescription',
+           'describe_img', 'limit', 'parse_r', 'describe_imgs', 'save_img_descs', 'add_descs_to_pg', 'add_descs_to_pgs',
+           'add_img_descs']
 
 # %% ../nbs/01_refine.ipynb 3
 from fastcore.all import *
@@ -60,13 +60,11 @@ def fmt_hdgs_idx(
 
 # %% ../nbs/01_refine.ipynb 18
 class HeadingCorrection(BaseModel):
+    "A single heading correction mapping an index to its corrected markdown heading"
     index: int
     corrected: str
 
-class HeadingCorrections(BaseModel):
-    corrections: list[HeadingCorrection]
-
-# %% ../nbs/01_refine.ipynb 20
+# %% ../nbs/01_refine.ipynb 21
 prompt_fix_hdgs = """Fix markdown heading hierarchy errors while preserving the document's intended structure.
 
 INPUT FORMAT: Each heading is prefixed with its index number (e.g., "0. # Title ... page 1")
@@ -106,7 +104,7 @@ Headings to analyze:
 {headings_list}
 """
 
-# %% ../nbs/01_refine.ipynb 22
+# %% ../nbs/01_refine.ipynb 23
 def fix_hdg_hierarchy(
     hdgs: list[str], # List of markdown headings
     prompt: str=None, # Prompt to use
@@ -122,7 +120,7 @@ def fix_hdg_hierarchy(
     return {o['index']: o['corrected'] for o in fixes}
 
 
-# %% ../nbs/01_refine.ipynb 25
+# %% ../nbs/01_refine.ipynb 26
 @delegates(fix_hdg_hierarchy)
 def mk_fixes_lut(
     hdgs: list[str], # List of markdown headings
@@ -135,7 +133,7 @@ def mk_fixes_lut(
     fixes = fix_hdg_hierarchy(hdgs, model=model, api_key=api_key, **kwargs)
     return {hdgs[k]:v for k,v in fixes.items()}
 
-# %% ../nbs/01_refine.ipynb 28
+# %% ../nbs/01_refine.ipynb 29
 def apply_hdg_fixes(
     p:str, # Page to fix
     lut_fixes: dict[str, str], # Lookup table of fixes
@@ -144,7 +142,7 @@ def apply_hdg_fixes(
     for old in get_hdgs(p): p = p.replace(old, lut_fixes.get(old, old))
     return p
 
-# %% ../nbs/01_refine.ipynb 31
+# %% ../nbs/01_refine.ipynb 32
 @delegates(mk_fixes_lut)
 def fix_hdgs(src:str, model:str='claude-sonnet-4-5', dst:str=None, img_folder:str='img', **kwargs):
     "Fix heading hierarchy in markdown document"
@@ -156,13 +154,13 @@ def fix_hdgs(src:str, model:str='claude-sonnet-4-5', dst:str=None, img_folder:st
     lut = mk_fixes_lut(L([get_hdgs(pg) for pg in pgs_with_pg]).concat(), model, **kwargs)
     for i,p in enumerate(pgs_with_pg, 1): (dst_path/f'page_{i}.md').write_text(apply_hdg_fixes(p, lut))
 
-# %% ../nbs/01_refine.ipynb 37
+# %% ../nbs/01_refine.ipynb 38
 class ImgDescription(BaseModel):
     "Image classification and description for OCR'd documents"
     is_informative:bool # Whether image contains informative content (charts, diagrams, tables) vs decorative (logos, backgrounds)
     description:str # Detailed description of the image content for RAG and accessibility
 
-# %% ../nbs/01_refine.ipynb 40
+# %% ../nbs/01_refine.ipynb 41
 describe_img_prompt = """Analyze this image from an academic/technical document.
 
 Step 1: Determine if this image is informative for understanding the document content.
@@ -175,7 +173,7 @@ Step 2:
 
 Return your response as JSON with 'is_informative' (boolean) and 'description' (string) fields."""
 
-# %% ../nbs/01_refine.ipynb 41
+# %% ../nbs/01_refine.ipynb 42
 async def describe_img(
     img_path: Path,  # Path to the image file
     model: str = 'claude-sonnet-4-5',  # Model to use
@@ -186,7 +184,7 @@ async def describe_img(
     r = await chat([img_path.read_bytes(), prompt], response_format=ImgDescription)
     return r
 
-# %% ../nbs/01_refine.ipynb 45
+# %% ../nbs/01_refine.ipynb 46
 async def limit(
     semaphore, # Semaphore for concurrency control
     coro, # Coroutine to execute
@@ -198,14 +196,14 @@ async def limit(
         if delay: await sleep(delay)
         return r
 
-# %% ../nbs/01_refine.ipynb 47
+# %% ../nbs/01_refine.ipynb 48
 def parse_r(
     result # ModelResponse object from API call
 ): # Dictionary with 'is_informative' and 'description' keys
     "Extract and parse JSON content from model response"
     return json.loads(result.choices[0].message.content)
 
-# %% ../nbs/01_refine.ipynb 49
+# %% ../nbs/01_refine.ipynb 50
 async def describe_imgs(
     imgs: list[Path], # List of image file paths to describe
     model: str = 'claude-sonnet-4-5', # Model to use for image description
@@ -218,7 +216,7 @@ async def describe_imgs(
     results = await gather(*[limit(sem, describe_img(img, model, prompt), delay) for img in imgs])
     return {img.name: parse_r(r) for img, r in zip(imgs, results)}
 
-# %% ../nbs/01_refine.ipynb 51
+# %% ../nbs/01_refine.ipynb 52
 def save_img_descs(
     descs: dict, # Dictionary of image descriptions
     dst_fname: Path, # Path to save the JSON file
@@ -226,7 +224,7 @@ def save_img_descs(
     "Save image descriptions to JSON file"
     Path(dst_fname).write_text(json.dumps(descs, indent=2))
 
-# %% ../nbs/01_refine.ipynb 56
+# %% ../nbs/01_refine.ipynb 57
 def add_descs_to_pg(
     pg:str, # Page markdown content
     descs:dict # Dictionary mapping image filenames to their descriptions
@@ -237,7 +235,7 @@ def add_descs_to_pg(
         if fname in descs: pg = pg.replace(link, f"{link}\nAI-generated image description:\n___\n{descs[fname]['description']}\n___")
     return pg
 
-# %% ../nbs/01_refine.ipynb 61
+# %% ../nbs/01_refine.ipynb 62
 def add_descs_to_pgs(
     pgs:list, # List of page markdown strings
     descs:dict # Dictionary mapping image filenames to their descriptions
@@ -245,7 +243,7 @@ def add_descs_to_pgs(
     "Add AI-generated descriptions to images in all pages"
     return [add_descs_to_pg(pg, descs) for pg in pgs]
 
-# %% ../nbs/01_refine.ipynb 64
+# %% ../nbs/01_refine.ipynb 65
 async def add_img_descs(
     src:str, # Path to source markdown directory
     dst:str=None, # Destination directory (defaults to src if None)
