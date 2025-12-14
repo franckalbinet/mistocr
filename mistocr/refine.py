@@ -4,9 +4,9 @@
 
 # %% auto 0
 __all__ = ['prompt_fix_hdgs', 'describe_img_prompt', 'get_hdgs', 'add_pg_hdgs', 'read_pgs_pg', 'fmt_hdgs_idx',
-           'HeadingCorrection', 'fix_hdg_hierarchy', 'mk_fixes_lut', 'apply_hdg_fixes', 'fix_hdgs', 'ImgDescription',
-           'describe_img', 'limit', 'parse_r', 'describe_imgs', 'save_img_descs', 'add_descs_to_pg', 'add_descs_to_pgs',
-           'add_img_descs']
+           'HeadingCorrection', 'HeadingCorrections', 'fix_hdg_hierarchy', 'mk_fixes_lut', 'apply_hdg_fixes',
+           'fix_hdgs', 'ImgDescription', 'describe_img', 'limit', 'parse_r', 'describe_imgs', 'save_img_descs',
+           'add_descs_to_pg', 'add_descs_to_pgs', 'add_img_descs']
 
 # %% ../nbs/01_refine.ipynb 3
 from fastcore.all import *
@@ -63,6 +63,11 @@ class HeadingCorrection(BaseModel):
     "A single heading correction mapping an index to its corrected markdown heading"
     index: int
     corrected: str
+
+# %% ../nbs/01_refine.ipynb 19
+class HeadingCorrections(BaseModel):
+    "Collection of heading corrections returned by the LLM"
+    corrections: list[HeadingCorrection]
 
 # %% ../nbs/01_refine.ipynb 21
 prompt_fix_hdgs = """Fix markdown heading hierarchy errors while preserving the document's intended structure.

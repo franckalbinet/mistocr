@@ -4,7 +4,8 @@
 
 # %% auto 0
 __all__ = ['ocr_model', 'ocr_endpoint', 'get_api_key', 'upload_pdf', 'create_batch_entry', 'prep_pdf_batch', 'submit_batch',
-           'wait_for_job', 'download_results', 'save_images', 'save_page', 'save_pages', 'ocr_pdf', 'read_pgs']
+           'wait_for_job', 'download_results', 'save_images', 'save_page', 'save_pages', 'ocr_pdf', 'read_pgs',
+           'subset_pdf']
 
 # %% ../nbs/00_core.ipynb 3
 from fastcore.all import *
@@ -13,6 +14,7 @@ from io import BytesIO
 from pathlib import Path
 from PIL import Image
 from mistralai import Mistral
+import PyPDF2
 
 # %% ../nbs/00_core.ipynb 6
 def get_api_key(
@@ -181,7 +183,7 @@ def ocr_pdf(
     results = _run_batch(entries, c, poll_interval)
     return L([save_pages(r['response']['body'], dst, r['custom_id']) for r in results])
 
-# %% ../nbs/00_core.ipynb 47
+# %% ../nbs/00_core.ipynb 50
 def read_pgs(
     path:str, # OCR output directory, 
     join:bool=True # Join pages into single string
@@ -191,3 +193,24 @@ def read_pgs(
     pgs = sorted(path.glob('page_*.md'), key=lambda p: int(p.stem.split('_')[1]))
     contents = L([p.read_text() for p in pgs])
     return '\n\n'.join(contents) if join else contents
+
+# %% ../nbs/00_core.ipynb 57
+def subset_pdf(
+    path:str, # Path to PDF file
+    start:int=1, # Start page (1-based)
+    end:int=None, # End page (1-based, inclusive)
+    dst:str='.' # Output directory
+    ) -> Path: # Path to subset PDF
+    "Extract page range from PDF and save with range suffix"
+    path = Path(path)
+    writer = PyPDF2.PdfWriter()
+    with open(path, 'rb') as f:
+        reader = PyPDF2.PdfReader(f)
+        n = len(reader.pages)
+        end = end or n
+        s, e = max(0, start-1), min(n, end) - 1
+        for i in range(s, e+1): writer.add_page(reader.pages[i])
+    suffix = f"_p{s+1}-{e+1}" if s>0 or e<n-1 else ""
+    out = Path(dst) / f"{path.stem}{suffix}.pdf"
+    with open(out, 'wb') as f: writer.write(f)
+    return out
