@@ -17,7 +17,7 @@ The Transformer uses multi-head attention in three different ways:
 - The encoder contains self-attention layers. In a self-attention layer all of the keys, values and queries come from the same place, in this case, the output of the previous layer in the encoder. Each position in the encoder can attend to all positions in the previous layer of the encoder.
 - Similarly, self-attention layers in the decoder allow each position in the decoder to attend to all positions in the decoder up to and including that position. We need to prevent leftward information flow in the decoder to preserve the auto-regressive property. We implement this inside of scaled dot-product attention by masking out (setting to $-\infty$) all values in the input of the softmax which correspond to illegal connections. See Figure 2.
 
-#### 3.3 Position-wise Feed-Forward Networks ... page 5
+### 3.3 Position-wise Feed-Forward Networks ... page 5
 
 In addition to attention sub-layers, each of the layers in our encoder and decoder contains a fully connected feed-forward network, which is applied to each position separately and identically. This consists of two linear transformations with a ReLU activation in between.
 
@@ -25,6 +25,6 @@ $\mathrm{FFN}(x)=\max(0,xW_{1}+b_{1})W_{2}+b_{2}$ (2)
 
 While the linear transformations are the same across different positions, they use different parameters from layer to layer. Another way of describing this is as two convolutions with kernel size 1. The dimensionality of input and output is $d_{\mathrm{model}}=512$, and the inner-layer has dimensionality $d_{ff}=2048$.
 
-#### 3.4 Embeddings and Softmax ... page 5
+### 3.4 Embeddings and Softmax ... page 5
 
 Similarly to other sequence transduction models, we use learned embeddings to convert the input tokens and output tokens to vectors of dimension $d_{\mathrm{model}}$. We also use the usual learned linear transformation and softmax function to convert the decoder output to predicted next-token probabilities. In our model, we share the same weight matrix between the two embedding layers and the pre-softmax linear transformation, similar to *[30]*. In the embedding layers, we multiply those weights by $\sqrt{d_{\mathrm{model}}}$.

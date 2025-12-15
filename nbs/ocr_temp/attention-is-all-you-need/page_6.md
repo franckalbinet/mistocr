@@ -27,7 +27,7 @@ We also experimented with using learned positional embeddings [9] instead, and f
 
 ## 4 Why Self-Attention ... page 6
 
-In this section we compare various aspects of self-attention layers to the recurrent and convolutional layers commonly used for mapping one variable-length sequence of symbol representations  $(x_{1},\ldots ,x_{n})$  to another sequence of equal length  $(z_{1},\ldots ,z_{n})$ , with  $x_{i},z_{i}\in \mathbb{R}^{d}$ , such as a hidden layer in a typical sequence transduction encoder or decoder. Motivating our use of self-attention we consider three desiderata.
+In this section we compare various aspects of self-attention layers to the recurrent and convolutional layers commonly used for mapping one variable-length sequence of symbol representations  $(x_{1},\dots,x_{n})$  to another sequence of equal length  $(z_{1},\dots,z_{n})$ , with  $x_{i},z_{i}\in \mathbb{R}^{d}$ , such as a hidden layer in a typical sequence transduction encoder or decoder. Motivating our use of self-attention we consider three desiderata.
 
 One is the total computational complexity per layer. Another is the amount of computation that can be parallelized, as measured by the minimum number of sequential operations required.
 

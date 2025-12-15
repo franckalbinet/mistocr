@@ -1,8 +1,4 @@
 ![img-0.jpeg](img-0.jpeg)
-AI-generated image description:
-___
-This is an architectural diagram of a Transformer model, showing the encoder-decoder structure. The left side shows the encoder with N× stacked layers, each containing Multi-Head Attention and Feed Forward sublayers with Add & Norm operations. The right side shows the decoder with N× stacked layers, featuring Masked Multi-Head Attention, Multi-Head Attention (for encoder-decoder attention), and Feed Forward sublayers, also with Add & Norm operations. Both sides include Positional Encoding added to Input Embedding (encoder) and Output Embedding (decoder). The decoder processes outputs shifted right. The architecture flows upward through Linear and Softmax layers to produce Output Probabilities. Residual connections are indicated by arrows wrapping around each sublayer block. This diagram represents the standard Transformer architecture used in natural language processing and sequence-to-sequence tasks.
-___
 Figure 1: The Transformer - model architecture.
 
 The Transformer follows this overall architecture using stacked self-attention and point-wise, fully connected layers for both the encoder and decoder, shown in the left and right halves of Figure 1, respectively.

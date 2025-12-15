@@ -1,15 +1,7 @@
 ![img-1.jpeg](img-1.jpeg)
-AI-generated image description:
-___
-This is a computational flow diagram showing the architecture of a neural network attention mechanism, specifically depicting the scaled dot-product attention calculation. The diagram shows a bottom-up flow with three inputs: Q (Query), K (Key), and V (Value). The processing steps are: (1) MatMul operation combining Q and K, (2) Scale operation to normalize the result, (3) optional Mask operation, (4) SoftMax activation function to produce attention weights, and (5) final MatMul operation combining the attention weights with V to produce the output. This is a standard representation of the attention mechanism commonly used in transformer architectures and neural machine translation models.
-___
 Scaled Dot-Product Attention
 
 ![img-2.jpeg](img-2.jpeg)
-AI-generated image description:
-___
-Architecture diagram showing a Scaled Dot-Product Attention mechanism. The diagram illustrates the flow of three inputs (V, K, Q) at the bottom, each passing through separate Linear transformation layers. These three linear outputs feed into a central Scaled Dot-Product Attention block (shown in purple/lavender), which has a parameter 'h' indicated on the right side. The attention block outputs multiple parallel streams that converge into a Concat (concatenation) operation, followed by a final Linear transformation at the top. This is a fundamental component of transformer neural network architectures, showing how query (Q), key (K), and value (V) vectors are processed through multi-head attention.
-___
 Multi-Head Attention
 Figure 2: (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel.
 
