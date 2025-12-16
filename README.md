@@ -72,18 +72,6 @@ from mistocr.pipeline import pdf_to_md
 await pdf_to_md('files/test/resnet.pdf', 'files/test/md_test')
 ```
 
-    Step 1/3: Running OCR on files/test/resnet.pdf...
-    Mistral batch job status: QUEUED
-    Mistral batch job status: RUNNING
-    Mistral batch job status: RUNNING
-    Step 2/3: Fixing heading hierarchy...
-    Step 3/3: Adding image descriptions...
-    Describing 7 images...
-    Saved descriptions to ocr_temp/resnet/img_descriptions.json
-    Adding descriptions to 12 pages...
-    Done! Enriched pages saved to files/test/md_test
-    Done!
-
 This will (as indicated by the output):
 
 1.  OCR the PDF using Mistral’s batch API
