@@ -51,12 +51,24 @@ def create_batch_entry(
     path:str, # Path to PDF file, 
     url:str, # Mistral signed URL
     cid:str=None, # Custom ID (by default using the file name without extension)
-    inc_img:bool=True # Include image in response
+    inc_img:bool=True, # Include image in response
+    extract_header:bool=False, # Extract headers from document
+    extract_footer:bool=False # Extract footers from document
     ) -> dict[str, str | dict[str, str | bool]]: # Batch entry dict
     "Create a batch entry dict for OCR"
     path = Path(path)
     if not cid: cid = path.stem
-    return dict(custom_id=cid, body=dict(document=dict(type="document_url", document_url=url), include_image_base64=inc_img))
+    return dict(
+        custom_id=cid, 
+        body=dict(
+            document=dict(
+                type="document_url", 
+                document_url=url), 
+                include_image_base64=inc_img, 
+                extract_header=extract_header, 
+                extract_footer=extract_footer
+            )
+        )
 
 # %% ../nbs/00_core.ipynb 18
 def prep_pdf_batch(
