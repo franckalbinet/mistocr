@@ -72,7 +72,25 @@ from mistocr.pipeline import pdf_to_md
 await pdf_to_md('files/test/resnet.pdf', 'files/test/md_test')
 ```
 
-This will (as indicated by the output):
+    mistocr.pipeline - INFO - Step 1/3: Running OCR on files/test/resnet.pdf...
+    mistocr.core - INFO - Waiting for batch job 4ec899ca-ada8-4fa7-8894-0191ff6ac4e5 (initial status: QUEUED)
+    mistocr.core - DEBUG - Job 4ec899ca-ada8-4fa7-8894-0191ff6ac4e5 status: QUEUED (elapsed: 0s)
+    mistocr.core - DEBUG - Job 4ec899ca-ada8-4fa7-8894-0191ff6ac4e5 status: RUNNING (elapsed: 2s)
+    mistocr.core - DEBUG - Job 4ec899ca-ada8-4fa7-8894-0191ff6ac4e5 status: RUNNING (elapsed: 2s)
+    mistocr.core - DEBUG - Job 4ec899ca-ada8-4fa7-8894-0191ff6ac4e5 status: RUNNING (elapsed: 2s)
+    mistocr.core - INFO - Job 4ec899ca-ada8-4fa7-8894-0191ff6ac4e5 completed with status: SUCCESS
+    mistocr.pipeline - INFO - Step 2/3: Fixing heading hierarchy...
+    mistocr.pipeline - INFO - Step 3/3: Adding image descriptions...
+
+    Describing 12 images...
+
+    mistocr.pipeline - INFO - Done!
+
+    Saved descriptions to /tmp/tmp62c7_ac1/resnet/img_descriptions.json
+    Adding descriptions to 12 pages...
+    Done! Enriched pages saved to files/test/md_test
+
+This will:
 
 1.  OCR the PDF using Mistral’s batch API
 2.  Fix heading hierarchy inconsistencies
