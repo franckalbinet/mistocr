@@ -8,12 +8,10 @@ mentioned in passing, as if it’s a trivial step. Practice shows it’s far
 from it. Poorly converted PDFs mean garbage-in-garbage-out for
 downstream AI-system (RAG, …).
 
-When [Mistral AI](https://mistral.ai) released their [state-of-the-art
-OCR model](https://mistral.ai/fr/news/mistral-ocr) in March 2025, it
-opened new possibilities for large-scale document processing. While
-alternatives like [datalab.to](https://www.datalab.to) and
-[docling.ai](https://www.docling.ai) offer viable solutions, Mistral OCR
-delivers exceptional accuracy at a compelling price point.
+**mistocr** is powered by [Mistral OCR
+3](https://mistral.ai/news/mistral-ocr-3), Mistral AI’s latest OCR model
+(December 2025), which delivers exceptional accuracy at a compelling
+price point.
 
 **mistocr** emerged from months of real-world usage across projects
 requiring large-scale processing of niche-domain PDFs. It addresses two
@@ -29,9 +27,10 @@ fundamental challenges that raw OCR output leaves unsolved:
   markdown. This makes visual information searchable and accessible for
   downstream applications.
 
-- **Cost-efficient batch processing**: The OCR step exclusively uses
-  Mistral’s batch API, cutting costs by 50% (\$0.50 vs \$1.00 per 1000
-  pages) while eliminating the boilerplate code typically required.
+- **Cost-efficient batch processing**: When processing multiple PDFs,
+  mistocr automatically uses Mistral’s batch API, cutting costs by 50%
+  (\$1 vs \$2 per 1000 pages). Single PDFs are processed immediately
+  without batch queue delays.
 
 **In short**: Complete PDF OCR with heading hierarchy fixes and image
 descriptions for RAG and LLM pipelines.
@@ -185,22 +184,6 @@ For complete control over each pipeline step, see the
 [refine](https://fr.anckalbi.net/mistocr/refine.html), and
 [pipeline](https://fr.anckalbi.net/mistocr/pipeline.html) module
 documentation.
-
-## Known Limitations & Future Work
-
-`mistocr` is under active development. Current limitations include:
-
-- **No timeout on batch jobs**: Jobs poll indefinitely until completion.
-  If a job stalls, manual intervention is required.
-- **Limited error handling**: When batch jobs fail, error reporting and
-  recovery options are minimal.
-- **Progress monitoring**: Currently limited to periodic status prints.
-  Future versions will support callbacks or streaming updates for better
-  real-time monitoring.
-
-Contributions are welcome! If you encounter issues or have ideas for
-improvements, please open an issue or discussion on
-[GitHub](https://github.com/franckalbinet/mistocr).
 
 ## Developer Guide
 
