@@ -21,7 +21,6 @@ logging.basicConfig(level=logging.WARNING, format='%(name)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 # %% ../nbs/02_pipeline.ipynb #d42c6785
-@delegates(add_img_descs)
 async def pdf_to_md(
     pdf_path:str,                   # Path to input PDF file
     dst:str,                        # Destination directory for output markdown
@@ -29,20 +28,24 @@ async def pdf_to_md(
     model:str='claude-sonnet-4-5',  # Model to use for heading fixes and image descriptions
     add_img_desc:bool=True,         # Whether to add image descriptions
     progress:bool=True,             # Whether to show progress messages
-    **kwargs
+    fix_kwargs:dict=None,           # Extra kwargs for fix_hdgs (e.g. prompt, max_tokens)
+    desc_kwargs:dict=None,          # Extra kwargs for add_img_descs (e.g. prompt, batch_sz, max_conc)
     ):
-    "Convert PDF to markdown with OCR, fixed heading hierarchy, and optional image descriptions"
-    "Convert PDF to markdown with OCR, fixed heading hierarchy, and optional image descriptions"
+    "Convert a single PDF to markdown with OCR, fixed heading hierarchy, and optional image descriptions. Batch version planned. See `fix_hdgs` and `add_img_descs` for available kwargs."
+    if isinstance(pdf_path, (list, tuple)): raise ValueError("pdf_to_md processes a single PDF; batch version coming soon")
+    fix_kwargs,desc_kwargs = fix_kwargs or {}, desc_kwargs or {}
     cleanup = ocr_dst is None
     if cleanup: ocr_dst = tempfile.mkdtemp()
     n_steps = 3 if add_img_desc else 2
     if progress: logger.info(f"Step 1/{n_steps}: Running OCR on {pdf_path}...")
-    ocr_dir = ocr_pdf(pdf_path, ocr_dst)[0]
+    ocr_dir = ocr_pdf(pdf_path, ocr_dst)
     if progress: logger.info(f"Step 2/{n_steps}: Fixing heading hierarchy...")
-    fix_hdgs(ocr_dir, model=model)
+    fix_hdgs(ocr_dir, model=model, **fix_kwargs)
     if add_img_desc:
         if progress: logger.info(f"Step 3/{n_steps}: Adding image descriptions...")
-        await add_img_descs(ocr_dir, dst=dst, model=model, progress=progress, **kwargs)
+        await add_img_descs(ocr_dir, dst=dst, model=model, progress=progress, **desc_kwargs)
     elif dst != str(ocr_dir): shutil.copytree(ocr_dir, dst, dirs_exist_ok=True)
     if cleanup: shutil.rmtree(ocr_dst)
     if progress: logger.info("Done!")
+
+

@@ -4,9 +4,9 @@
 
 # %% auto #0
 __all__ = ['logger', 'ocr_model', 'ocr_endpoint', 'get_api_key', 'run_single', 'upload_pdf', 'create_batch_entry',
-           'prep_pdf_batch', 'submit_batch', 'check_timeout', 'wait_for_job', 'download_results', 'prep_batch',
-           'run_batch', 'single_to_batch_result', 'save_images', 'save_page', 'save_pages', 'get_paths', 'ocr_pdf',
-           'read_pgs', 'subset_pdf']
+           'prep_pdf_batch', 'submit_batch', 'wait_for_job', 'download_results', 'prep_batch', 'run_batch',
+           'single_to_batch_result', 'save_images', 'save_page', 'save_pages', 'get_paths', 'ocr_pdf', 'read_pgs',
+           'subset_pdf']
 
 # %% ../nbs/00_core.ipynb #044c5702
 from fastcore.all import *
@@ -115,37 +115,29 @@ def submit_batch(
         batch_data = c.files.upload(file=dict(file_name="batch.jsonl", content=open(f.name, "rb")), purpose="batch")
     return c.batch.jobs.create(input_files=[batch_data.id], model=model, endpoint=endpoint)
 
-# %% ../nbs/00_core.ipynb #fb4b2a02
-def check_timeout(
-    elapsed:int, # Total elapsed time (seconds)
-    timeout:int, # Maximum allowed time (seconds)
-    job_id:str # Batch job ID
-    ):
-    "Raise TimeoutError if job has exceeded timeout"
-    if elapsed >= timeout: raise TimeoutError(f"Job {job_id} timed out after {elapsed}s (timeout: {timeout}s)")
-
 # %% ../nbs/00_core.ipynb #a5f0cd6a
 def wait_for_job(
-    job:dict, # Batch job from submit_batch
-    c:Mistral=None, # Mistral client
-    poll_interval:int=1, # Seconds between status checks
-    timeout:int=300 # Max total seconds before timeout
-    ) -> dict: # Completed job dict
-    "Poll job until completion and return final job status"
-    logger.info(f"Waiting for batch job {job.id} (initial status: {job.status})")
-    elapsed = 0
+    job, # Batch job from submit_batch
+    c=None, # Mistral client
+    poll_interval=10, # Seconds between status checks
+    timeout=None # Max total seconds before timeout
+    ) -> dict: # Job dict
+    "Poll job until completion, printing only on status change"
+    prev_status, elapsed = None, 0
     while job.status in ["QUEUED", "RUNNING"]:
-        total = job.total_requests or 0
-        done = (job.succeeded_requests or 0) + (job.failed_requests or 0)
-        progress = f" ({done}/{total})" if total > 1 else ""
-        logger.debug(f"Job {job.id} status: {job.status}{progress} (elapsed: {elapsed}s)")
-        check_timeout(elapsed, timeout, job.id)
+        total, done = job.total_requests or 0, (job.succeeded_requests or 0) + (job.failed_requests or 0)
+        curr_status = f"{job.status} ({done}/{total})" if total > 1 else job.status
+        if curr_status != prev_status: print(f"Job {job.id}: {curr_status} ({elapsed}s)")
+        prev_status = curr_status
+        if timeout and elapsed >= timeout:
+            c.batch.jobs.cancel(job_id=job.id)
+            raise TimeoutError(f"Job {job.id} timed out after {elapsed}s and was cancelled")
         time.sleep(poll_interval)
         elapsed += poll_interval
         job = c.batch.jobs.get(job_id=job.id)
-    logger.info(f"Job {job.id} completed with status: {job.status}")
-    if job.status != "SUCCESS": logger.warning(f"Job {job.id} finished with non-success status: {job.status}")
+    print(f"Job {job.id}: {job.status} ({elapsed}s)")
     return job
+
 
 # %% ../nbs/00_core.ipynb #462a85f1
 def download_results(

@@ -1,44 +1,30 @@
-|  layer name | output size | 18-layer | 34-layer | 50-layer | 101-layer | 152-layer  |
-| --- | --- | --- | --- | --- | --- | --- |
-|  conv1 | 112×112 | 7×7, 64, stride 2  |   |   |   |   |
-|  conv2_x | 56×56 | 3×3 max pool, stride 2  |   |   |   |   |
-|   |   |  [3×3, 64]×2 | [3×3, 64]×3 | [1×1, 64]3×3, 641×1, 256 | [1×1, 64]3×3, 641×1, 256 | [1×1, 64]3×3, 641×1, 256  |
-|  conv3_x | 28×28 | [3×3, 128]×2 | [3×3, 128]×4 | [1×1, 128]3×3, 1281×1, 512 | [1×1, 128]3×3, 1281×1, 512 | [1×1, 128]3×3, 1281×1, 512  |
-|  conv4_x | 14×14 | [3×3, 256]×2 | [3×3, 256]×6 | [1×1, 256]3×3, 2561×1, 1024 | [1×1, 256]3×3, 2561×1, 1024 | [1×1, 256]3×3, 2561×1, 1024  |
-|  conv5_x | 7×7 | [3×3, 512]×2 | [3×3, 512]×3 | [1×1, 512]3×3, 5121×1, 2048 | [1×1, 512]3×3, 5121×1, 2048 | [1×1, 512]3×3, 5121×1, 2048  |
-|   | 1×1 | average pool, 1000-d fc, softmax  |   |   |   |   |
-|  FLOPs |   | 1.8×109 | 3.6×109 | 3.8×109 | 7.6×109 | 11.3×109  |
+output values. These are concatenated and once again projected, resulting in the final values, as depicted in Figure 2.
 
-![img-4.jpeg](img-4.jpeg)
-AI-generated image description:
-___
-Line chart showing training error (%) versus iterations (1e4) for neural network models. The chart compares two architectures: plain-18 (cyan line) and plain-34 (dark red line), with their corresponding 34-layer and 18-layer variants shown in lighter shades. The y-axis ranges from 20% to 60% error, and the x-axis extends from 0 to 50 iterations (×1e4). Both models show a stepwise decrease in error over training, starting around 60% and converging to approximately 30-33%. The plain-18 model (cyan) shows slightly better final performance than plain-34 (red), suggesting that the deeper 34-layer network does not necessarily achieve lower training error. The chart demonstrates the training dynamics and comparative performance of different network depths in what appears to be a deep learning experiment.
-___
-Figure 4. Training on ImageNet. Thin curves denote training error, and bold curves denote validation error of the center crops. Left: plain networks of 18 and 34 layers. Right: ResNets of 18 and 34 layers. In this plot, the residual networks have no extra parameter compared to their plain counterparts.
+Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this.
 
-![img-5.jpeg](img-5.jpeg)
-AI-generated image description:
-___
-Line chart comparing training error rates over iterations for ResNet-18 and ResNet-34 neural network architectures. The x-axis shows iterations (×1e4) from 0 to 50, and the y-axis shows error percentage from 20% to 60%. Both architectures start at approximately 60% error. ResNet-34 (red line) shows faster initial convergence, dropping sharply around iteration 10 and again around iteration 20, stabilizing near 25-27% error. ResNet-18 (cyan line) follows a similar pattern but converges to a slightly higher error rate of approximately 30-32%. Multiple lighter-colored lines in the background suggest multiple training runs or confidence intervals. The chart demonstrates that the deeper 34-layer network achieves better performance (lower error) than the 18-layer network, with both showing characteristic step-wise learning rate decay patterns.
-___
+$\mathrm{MultiHead}(Q,K,V)$ $=\mathrm{Concat}(\mathrm{head}_{1},...,\mathrm{head}_{\mathrm{h}})W^{O}$
+$\mathrm{where\ head_{i}}$ $=\mathrm{Attention}(QW_{i}^{Q},KW_{i}^{K},VW_{i}^{V})$
 
-Table 1. Architectures for ImageNet. Building blocks are shown in brackets (see also Fig. 5), with the numbers of blocks stacked. Down-sampling is performed by conv3_1, conv4_1, and conv5_1 with a stride of 2.
+Where the projections are parameter matrices $W_{i}^{Q}\in\mathbb{R}^{d_{\mathrm{model}}\times d_{k}}$, $W_{i}^{K}\in\mathbb{R}^{d_{\mathrm{model}}\times d_{k}}$, $W_{i}^{V}\in\mathbb{R}^{d_{\mathrm{model}}\times d_{v}}$ and $W^{O}\in\mathbb{R}^{hd_{v}\times d_{\mathrm{model}}}$.
 
-|   | plain | ResNet  |
-| --- | --- | --- |
-|  18 layers | 27.94 | 27.88  |
-|  34 layers | 28.54 | 25.03  |
+In this work we employ $h=8$ parallel attention layers, or heads. For each of these we use $d_{k}=d_{v}=d_{\mathrm{model}}/h=64$. Due to the reduced dimension of each head, the total computational cost is similar to that of single-head attention with full dimensionality.
 
-Table 2. Top-1 error (\%, 10-crop testing) on ImageNet validation. Here the ResNets have no extra parameter compared to their plain counterparts. Fig. 4 shows the training procedures.
+##### 3.2.3 Applications of Attention in our Model ... page 5
 
-34-layer plain net has higher training error throughout the whole training procedure, even though the solution space of the 18-layer plain network is a subspace of that of the 34-layer one.
+The Transformer uses multi-head attention in three different ways:
 
-We argue that this optimization difficulty is unlikely to be caused by vanishing gradients. These plain networks are trained with BN [16], which ensures forward propagated signals to have non-zero variances. We also verify that the backward propagated gradients exhibit healthy norms with BN. So neither forward nor backward signals vanish. In fact, the 34-layer plain net is still able to achieve competitive accuracy (Table 3), suggesting that the solver works to some extent. We conjecture that the deep plain nets may have exponentially low convergence rates, which impact the
+- In "encoder-decoder attention" layers, the queries come from the previous decoder layer, and the memory keys and values come from the output of the encoder. This allows every position in the decoder to attend over all positions in the input sequence. This mimics the typical encoder-decoder attention mechanisms in sequence-to-sequence models such as *[38, 2, 9]*.
+- The encoder contains self-attention layers. In a self-attention layer all of the keys, values and queries come from the same place, in this case, the output of the previous layer in the encoder. Each position in the encoder can attend to all positions in the previous layer of the encoder.
+- Similarly, self-attention layers in the decoder allow each position in the decoder to attend to all positions in the decoder up to and including that position. We need to prevent leftward information flow in the decoder to preserve the auto-regressive property. We implement this inside of scaled dot-product attention by masking out (setting to $-\infty$) all values in the input of the softmax which correspond to illegal connections. See Figure 2.
 
-reducing of the training error $^3$ . The reason for such optimization difficulties will be studied in the future.
+### 3.3 Position-wise Feed-Forward Networks ... page 5
 
-Residual Networks. Next we evaluate 18-layer and 34-layer residual nets (ResNets). The baseline architectures are the same as the above plain nets, expect that a shortcut connection is added to each pair of  $3 \times 3$  filters as in Fig. 3 (right). In the first comparison (Table 2 and Fig. 4 right), we use identity mapping for all shortcuts and zero-padding for increasing dimensions (option A). So they have no extra parameter compared to the plain counterparts.
+In addition to attention sub-layers, each of the layers in our encoder and decoder contains a fully connected feed-forward network, which is applied to each position separately and identically. This consists of two linear transformations with a ReLU activation in between.
 
-We have three major observations from Table 2 and Fig. 4. First, the situation is reversed with residual learning – the 34-layer ResNet is better than the 18-layer ResNet (by  $2.8\%$ ). More importantly, the 34-layer ResNet exhibits considerably lower training error and is generalizable to the validation data. This indicates that the degradation problem is well addressed in this setting and we manage to obtain accuracy gains from increased depth.
+$\mathrm{FFN}(x)=\max(0,xW_{1}+b_{1})W_{2}+b_{2}$ (2)
 
-Second, compared to its plain counterpart, the 34-layer
+While the linear transformations are the same across different positions, they use different parameters from layer to layer. Another way of describing this is as two convolutions with kernel size 1. The dimensionality of input and output is $d_{\mathrm{model}}=512$, and the inner-layer has dimensionality $d_{ff}=2048$.
+
+### 3.4 Embeddings and Softmax ... page 5
+
+Similarly to other sequence transduction models, we use learned embeddings to convert the input tokens and output tokens to vectors of dimension $d_{\mathrm{model}}$. We also use the usual learned linear transformation and softmax function to convert the decoder output to predicted next-token probabilities. In our model, we share the same weight matrix between the two embedding layers and the pre-softmax linear transformation, similar to *[30]*. In the embedding layers, we multiply those weights by $\sqrt{d_{\mathrm{model}}}$.

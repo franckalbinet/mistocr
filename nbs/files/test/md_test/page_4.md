@@ -1,24 +1,34 @@
-![img-3.jpeg](img-3.jpeg)
+![img-1.jpeg](img-1.jpeg)
 AI-generated image description:
 ___
-This is a comparative architecture diagram showing three deep convolutional neural network architectures: VGG-19, 34-layer plain, and 34-layer residual network. The diagram illustrates the layer-by-layer structure of each network from input image to final output. VGG-19 (left) shows a sequential architecture with multiple 3x3 convolutional layers with varying filter counts (64, 128, 256, 512) and pooling operations, reducing spatial dimensions from 224→112→56→28→14→7→1. The 34-layer plain network (center) follows a similar sequential pattern but with more layers and different filter configurations, using 7x7 initial convolution followed by multiple 3x3 convolutions. The 34-layer residual network (right) has the same layer structure as the plain network but includes skip connections (shown as curved arrows) that bypass groups of layers, implementing the residual learning framework. These skip connections are the key distinguishing feature, allowing gradients to flow directly through the network. All three architectures end with fully connected layers (fc 4096 or fc 1000) for classification. The color coding (blue, tan, green, pink) indicates different stages of the networks with different spatial resolutions and filter depths.
+This is a computational flow diagram showing the architecture of a neural network attention mechanism, specifically depicting the scaled dot-product attention computation. The diagram shows a bottom-up flow with three inputs labeled Q (Query), K (Key), and V (Value). The processing steps are: (1) MatMul operation combining Q and K inputs, (2) Scale operation to normalize the result, (3) optional Mask operation indicated by 'Mask (opt.)', (4) SoftMax activation function shown in green, (5) another MatMul operation combining the SoftMax output with V, and finally outputting the result at the top. This represents the standard transformer attention mechanism formula: Attention(Q,K,V) = softmax(QK^T/√d_k)V, where the scaling factor prevents gradients from becoming too small in higher dimensions.
 ___
-Figure 3. Example network architectures for ImageNet. Left: the VGG-19 model [41] (19.6 billion FLOPs) as a reference. Middle: a plain network with 34 parameter layers (3.6 billion FLOPs). Right: a residual network with 34 parameter layers (3.6 billion FLOPs). The dotted shortcuts increase dimensions. Table 1 shows more details and other variants.
+Scaled Dot-Product Attention
 
-Residual Network. Based on the above plain network, we insert shortcut connections (Fig. 3, right) which turn the network into its counterpart residual version. The identity shortcuts (Eqn.(1)) can be directly used when the input and output are of the same dimensions (solid line shortcuts in Fig. 3). When the dimensions increase (dotted line shortcuts in Fig. 3), we consider two options: (A) The shortcut still performs identity mapping, with extra zero entries padded for increasing dimensions. This option introduces no extra parameter; (B) The projection shortcut in Eqn.(2) is used to match dimensions (done by  $1 \times 1$  convolutions). For both options, when the shortcuts go across feature maps of two sizes, they are performed with a stride of 2.
+![img-2.jpeg](img-2.jpeg)
+AI-generated image description:
+___
+Architecture diagram of a Scaled Dot-Product Attention mechanism, a fundamental component in transformer neural networks. The diagram shows the data flow from bottom to top: three inputs labeled V (Value), K (Key), and Q (Query) each pass through separate Linear transformation layers. These outputs feed into a Scaled Dot-Product Attention block (shown in purple/lavender), which has a parameter 'h' indicating multi-head attention. The attention mechanism's output goes through a Concat (concatenation) operation, followed by a final Linear layer at the top. Arrows indicate the direction of data flow through the network. This is a standard representation of the multi-head attention architecture used in transformer models.
+___
+Multi-Head Attention
+Figure 2: (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel.
 
-### 3.4. Implementation ... page 4
+of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.
 
-Our implementation for ImageNet follows the practice in [21, 41]. The image is resized with its shorter side randomly sampled in [256, 480] for scale augmentation [41]. A  $224 \times 224$  crop is randomly sampled from an image or its horizontal flip, with the per-pixel mean subtracted [21]. The standard color augmentation in [21] is used. We adopt batch normalization (BN) [16] right after each convolution and before activation, following [16]. We initialize the weights as in [13] and train all plain/residual nets from scratch. We use SGD with a mini-batch size of 256. The learning rate starts from 0.1 and is divided by 10 when the error plateaus, and the models are trained for up to  $60 \times 10^{4}$  iterations. We use a weight decay of 0.0001 and a momentum of 0.9. We do not use dropout [14], following the practice in [16].
+#### 3.2.1 Scaled Dot-Product Attention ... page 4
 
-In testing, for comparison studies we adopt the standard 10-crop testing [21]. For best results, we adopt the fully convolutional form as in [41, 13], and average the scores at multiple scales (images are resized such that the shorter side is in  $\{224, 256, 384, 480, 640\}$ ).
+We call our particular attention "Scaled Dot-Product Attention" (Figure 2). The input consists of queries and keys of dimension  $d_{k}$ , and values of dimension  $d_{v}$ . We compute the dot products of the query with all keys, divide each by  $\sqrt{d_k}$ , and apply a softmax function to obtain the weights on the values.
 
-## 4. Experiments ... page 4
+In practice, we compute the attention function on a set of queries simultaneously, packed together into a matrix  $Q$ . The keys and values are also packed together into matrices  $K$  and  $V$ . We compute the matrix of outputs as:
 
-### 4.1. ImageNet Classification ... page 4
+$$
+\operatorname {A t t e n t i o n} (Q, K, V) = \operatorname {s o f t m a x} \left(\frac {Q K ^ {T}}{\sqrt {d _ {k}}}\right) V \tag {1}
+$$
 
-We evaluate our method on the ImageNet 2012 classification dataset [36] that consists of 1000 classes. The models are trained on the 1.28 million training images, and evaluated on the 50k validation images. We also obtain a final result on the 100k test images, reported by the test server. We evaluate both top-1 and top-5 error rates.
+The two most commonly used attention functions are additive attention [2], and dot-product (multiplicative) attention. Dot-product attention is identical to our algorithm, except for the scaling factor of  $\frac{1}{\sqrt{d_k}}$ . Additive attention computes the compatibility function using a feed-forward network with a single hidden layer. While the two are similar in theoretical complexity, dot-product attention is much faster and more space-efficient in practice, since it can be implemented using highly optimized matrix multiplication code.
 
-Plain Networks. We first evaluate 18-layer and 34-layer plain nets. The 34-layer plain net is in Fig. 3 (middle). The 18-layer plain net is of a similar form. See Table 1 for detailed architectures.
+While for small values of  $d_{k}$  the two mechanisms perform similarly, additive attention outperforms dot product attention without scaling for larger values of  $d_{k}$  [3]. We suspect that for large values of  $d_{k}$ , the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients. To counteract this effect, we scale the dot products by  $\frac{1}{\sqrt{d_k}}$ .
 
-The results in Table 2 show that the deeper 34-layer plain net has higher validation error than the shallower 18-layer plain net. To reveal the reasons, in Fig. 4 (left) we compare their training/validation errors during the training procedure. We have observed the degradation problem - the
+#### 3.2.2 Multi-Head Attention ... page 4
+
+Instead of performing a single attention function with  $d_{\mathrm{model}}$ -dimensional keys, values and queries, we found it beneficial to linearly project the queries, keys and values  $h$  times with different, learned linear projections to  $d_k$ ,  $d_k$  and  $d_v$  dimensions, respectively. On each of these projected versions of queries, keys and values we then perform the attention function in parallel, yielding  $d_v$ -dimensional

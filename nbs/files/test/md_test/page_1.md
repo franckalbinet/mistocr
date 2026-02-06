@@ -1,44 +1,52 @@
-# Deep Residual Learning for Image Recognition ... page 1
+# Attention Is All You Need ... page 1
 
-Kaiming He
+Ashish Vaswani*
 
-Xiangyu Zhang
+Google Brain
 
-Shaoqing Ren
+avaswani@google.com
 
-Jian Sun
+Noam Shazeer*
 
-Microsoft Research
+Google Brain
 
-{kahe, v-xiangz, v-shren, jiansun}@microsoft.com
+noam@google.com
+
+Niki Parmar*
+
+Google Research
+
+nikip@google.com
+
+Jakob Uszkoreit*
+
+Google Research
+
+usz@google.com
+
+Llion Jones*
+
+Google Research
+
+llion@google.com
+
+Aidan N. Gomez*†
+
+University of Toronto
+
+aidan@cs.toronto.edu
+
+Łukasz Kaiser*
+
+Google Brain
+
+lukaszkaiser@google.com
+
+Illia Polosukhin*‡
+
+illia.polosukhin@gmail.com
 
 ## Abstract ... page 1
 
-Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth. On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers— $8 \times$  deeper than VGG nets [41] but still having lower complexity. An ensemble of these residual nets achieves  $3.57\%$  error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task. We also present analysis on CIFAR-10 with 100 and 1000 layers.
+The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.
 
-The depth of representations is of central importance for many visual recognition tasks. Solely due to our extremely deep representations, we obtain a  $28\%$  relative improvement on the COCO object detection dataset. Deep residual nets are foundations of our submissions to ILSVRC &amp; COCO 2015 competitions $^{1}$ , where we also won the 1st places on the tasks of ImageNet detection, ImageNet localization, COCO detection, and COCO segmentation.
-
-## 1. Introduction ... page 1
-
-Deep convolutional neural networks [22, 21] have led to a series of breakthroughs for image classification [21, 50, 40]. Deep networks naturally integrate low/mid/high-level features [50] and classifiers in an end-to-end multilayer fashion, and the "levels" of features can be enriched by the number of stacked layers (depth). Recent evidence [41, 44] reveals that network depth is of crucial importance, and the leading results [41, 44, 13, 16] on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks [8, 12, 7, 32, 27] have also
-
-![img-0.jpeg](img-0.jpeg)
-AI-generated image description:
-___
-Line chart comparing training error rates over iterations for two neural network architectures: a 56-layer model (red line) and a 20-layer model (yellow/green line). The x-axis shows iterations (×1e4) from 0 to 6, and the y-axis shows training error percentage from 0 to 20%. Both models show decreasing error over time, with the 56-layer network starting around 20% error and converging to approximately 6-7%, while the 20-layer network starts around 18% and converges to approximately 2-3% error. The 20-layer model demonstrates better performance (lower training error) than the deeper 56-layer model, suggesting a degradation problem where deeper networks perform worse than shallower ones.
-___
-Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.
-
-![img-1.jpeg](img-1.jpeg)
-AI-generated image description:
-___
-Line graph showing test error percentage versus iteration number (×1e4) comparing two neural network architectures: a 56-layer model (red line) and a 20-layer model (yellow line). The y-axis ranges from 0 to 20% test error, while the x-axis extends from 0 to 6 iterations (×1e4). Both models show decreasing error rates during training, with the 56-layer network starting around 20% error and stabilizing near 15%, while the 20-layer network begins slightly lower and converges to approximately 10% error. The graph demonstrates that the shallower 20-layer network achieves better performance (lower test error) compared to the deeper 56-layer network, suggesting potential optimization or degradation issues with increased network depth.
-___
-
-greatly benefited from very deep models.
-
-Driven by the significance of depth, a question arises: Is learning better networks as easy as stacking more layers? An obstacle to answering this question was the notorious problem of vanishing/exploding gradients [1, 9], which hamper convergence from the beginning. This problem, however, has been largely addressed by normalized initialization [23, 9, 37, 13] and intermediate normalization layers [16], which enable networks with tens of layers to start converging for stochastic gradient descent (SGD) with backpropagation [22].
-
-When deeper networks are able to start converging, a degradation problem has been exposed: with the network depth increasing, accuracy gets saturated (which might be unsurprising) and then degrades rapidly. Unexpectedly, such degradation is not caused by overfitting, and adding more layers to a suitably deep model leads to higher training error, as reported in [11, 42] and thoroughly verified by our experiments. Fig. 1 shows a typical example.
-
-The degradation (of training accuracy) indicates that not all systems are similarly easy to optimize. Let us consider a shallower architecture and its deeper counterpart that adds more layers onto it. There exists a solution by construction to the deeper model: the added layers are identity mapping, and the other layers are copied from the learned shallower model. The existence of this constructed solution indicates that a deeper model should produce no higher training error than its shallower counterpart. But experiments show that our current solvers on hand are unable to find solutions that
