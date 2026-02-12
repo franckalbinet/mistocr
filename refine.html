@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Fix heading hierarchy and describe images in OCR’d markdown documents">
+
+<title>Refine – mistocr</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-000f0825b9c55ed21d14970d810c14a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Refine – mistocr">
+<meta property="og:description" content="Fix heading hierarchy and describe images in OCR’d markdown documents">
+<meta property="og:site_name" content="mistocr">
+<meta name="twitter:title" content="Refine – mistocr">
+<meta name="twitter:description" content="Fix heading hierarchy and describe images in OCR’d markdown documents">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">mistocr</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./refine.html">Refine</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mistocr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Core</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./refine.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Refine</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pipeline</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#heading-hierarchy" id="toc-heading-hierarchy" class="nav-link active" data-scroll-target="#heading-hierarchy">Heading Hierarchy</a>
+  <ul class="collapse">
+  <li><a href="#get_hdgs" id="toc-get_hdgs" class="nav-link" data-scroll-target="#get_hdgs">get_hdgs</a></li>
+  <li><a href="#add_pg_hdgs" id="toc-add_pg_hdgs" class="nav-link" data-scroll-target="#add_pg_hdgs">add_pg_hdgs</a></li>
+  <li><a href="#read_pgs_pg" id="toc-read_pgs_pg" class="nav-link" data-scroll-target="#read_pgs_pg">read_pgs_pg</a></li>
+  <li><a href="#fmt_hdgs_idx" id="toc-fmt_hdgs_idx" class="nav-link" data-scroll-target="#fmt_hdgs_idx">fmt_hdgs_idx</a></li>
+  <li><a href="#headingcorrection" id="toc-headingcorrection" class="nav-link" data-scroll-target="#headingcorrection">HeadingCorrection</a></li>
+  <li><a href="#headingcorrections" id="toc-headingcorrections" class="nav-link" data-scroll-target="#headingcorrections">HeadingCorrections</a></li>
+  <li><a href="#fix_hdg_hierarchy" id="toc-fix_hdg_hierarchy" class="nav-link" data-scroll-target="#fix_hdg_hierarchy">fix_hdg_hierarchy</a></li>
+  <li><a href="#mk_fixes_lut" id="toc-mk_fixes_lut" class="nav-link" data-scroll-target="#mk_fixes_lut">mk_fixes_lut</a></li>
+  <li><a href="#apply_hdg_fixes" id="toc-apply_hdg_fixes" class="nav-link" data-scroll-target="#apply_hdg_fixes">apply_hdg_fixes</a></li>
+  <li><a href="#fix_hdgs" id="toc-fix_hdgs" class="nav-link" data-scroll-target="#fix_hdgs">fix_hdgs</a></li>
+  </ul></li>
+  <li><a href="#image-description" id="toc-image-description" class="nav-link" data-scroll-target="#image-description">Image Description</a>
+  <ul class="collapse">
+  <li><a href="#imgdescription" id="toc-imgdescription" class="nav-link" data-scroll-target="#imgdescription">ImgDescription</a></li>
+  <li><a href="#describe_img" id="toc-describe_img" class="nav-link" data-scroll-target="#describe_img">describe_img</a></li>
+  <li><a href="#limit" id="toc-limit" class="nav-link" data-scroll-target="#limit">limit</a></li>
+  <li><a href="#parse_r" id="toc-parse_r" class="nav-link" data-scroll-target="#parse_r">parse_r</a></li>
+  <li><a href="#describe_imgs" id="toc-describe_imgs" class="nav-link" data-scroll-target="#describe_imgs">describe_imgs</a></li>
+  <li><a href="#save_img_descs" id="toc-save_img_descs" class="nav-link" data-scroll-target="#save_img_descs">save_img_descs</a></li>
+  <li><a href="#add_descs_to_pg" id="toc-add_descs_to_pg" class="nav-link" data-scroll-target="#add_descs_to_pg">add_descs_to_pg</a></li>
+  <li><a href="#add_descs_to_pgs" id="toc-add_descs_to_pgs" class="nav-link" data-scroll-target="#add_descs_to_pgs">add_descs_to_pgs</a></li>
+  <li><a href="#add_img_descs" id="toc-add_img_descs" class="nav-link" data-scroll-target="#add_img_descs">add_img_descs</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/franckalbinet/mistocr/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="refine.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Refine</h1>
+</div>
+
+<div>
+  <div class="description">
+    Fix heading hierarchy and describe images in OCR’d markdown documents
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>This module refines markdown documents extracted from OCR’d PDFs through two main processes:</p>
+<ul>
+<li><p><strong>Heading Hierarchy Correction</strong>: OCR often corrupts document structure, creating inconsistent heading levels (e.g., jumping from H1 to H4, or using H2 for both sections and subsections). We use LLMs to analyze the full heading structure and automatically fix these issues, ensuring proper hierarchical relationships. Page numbers can optionally be added to headings for easier navigation.</p></li>
+<li><p><strong>Image Description</strong>: We classify images as informative (charts, diagrams, tables) or decorative (logos, backgrounds), then generate detailed descriptions for informative images using vision LLMs. These descriptions are inserted directly into the markdown, making visual content searchable and accessible for RAG systems and accessibility tools.</p></li>
+</ul>
+<p>Both processes work incrementally on page-by-page markdown files, caching results to avoid redundant API calls.</p>
+<div id="74b1473e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cachy <span class="im">import</span> enable_cachy</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>enable_cachy()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="heading-hierarchy" class="level2">
+<h2 class="anchored" data-anchor-id="heading-hierarchy">Heading Hierarchy</h2>
+<p>Functions for detecting and fixing markdown heading levels</p>
+<p>OCR’d PDF files often have corrupted heading hierarchies - headings may jump levels incorrectly (e.g., from H1 to H4) or use inconsistent levels for sections at the same depth. This section provides tools to automatically detect and fix these issues using LLMs, while also optionally adding page numbers for easier navigation.</p>
+<p>The first step is extracting all headings from a markdown document so we can analyze their structure.</p>
+<hr>
+<section id="get_hdgs" class="level3">
+<h3 class="anchored" data-anchor-id="get_hdgs">get_hdgs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_hdgs(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    md:<span class="bu">str</span>, <span class="co"># Markdown file string</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>L: <span class="co"># L of strings</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Return the markdown headings</em></p>
+<hr>
+</section>
+<section id="add_pg_hdgs" class="level3">
+<h3 class="anchored" data-anchor-id="add_pg_hdgs">add_pg_hdgs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_pg_hdgs(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    md:<span class="bu">str</span>, <span class="co"># Markdown file string,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    n:<span class="bu">int</span>, <span class="co"># Page number</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Markdown file string</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Add page number to all headings in page markdown</em></p>
+<p>The <code>add_pg_hdgs</code> function serves two important purposes:</p>
+<p><strong>1. Creating unique heading identifiers</strong></p>
+<p>When fixing heading hierarchies across an entire document, we need a way to distinguish between headings that have the same text but appear in different locations. For example, a document might have multiple “Introduction” or “Conclusion” headings in different chapters. By appending the page number to each heading, we create unique identifiers that allow us to build a lookup table mapping each specific heading instance to its corrected version. This assumes (reasonably) that the same heading text won’t appear twice on a single page.</p>
+<p><strong>2. Providing spatial context for LLMs</strong></p>
+<p>Adding page numbers gives LLMs valuable positional information when analyzing the document structure. The page number helps the model understand: - Where a heading sits in the overall document flow - The relative distance between sections - Whether headings that seem related are actually close together or far apart</p>
+<p>This spatial awareness can significantly improve the LLM’s ability to infer the correct hierarchical relationships between headings, especially in long documents where similar section names might appear at different structural levels.</p>
+<p>For instance:</p>
+<div id="30dea1ef" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pgs <span class="op">=</span> read_pgs(<span class="st">'files/test/md_all/attention-is-all-you-need'</span>, join<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pg0,pg0_with <span class="op">=</span> pgs[<span class="dv">0</span>][:<span class="dv">100</span>],add_pg_hdgs(pgs[<span class="dv">0</span>], n<span class="op">=</span><span class="dv">1</span>)[:<span class="dv">100</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Before:</span><span class="ch">\n</span><span class="st">'</span> <span class="op">+</span> <span class="dv">80</span><span class="op">*</span><span class="st">'-'</span> <span class="op">+</span> <span class="ss">f'</span><span class="ch">\n</span><span class="sc">{</span>pg0<span class="sc">}</span><span class="ch">\n\n</span><span class="ss">After:</span><span class="ch">\n</span><span class="ss">'</span> <span class="op">+</span> <span class="dv">80</span><span class="op">*</span><span class="st">'-'</span> <span class="op">+</span> <span class="ss">f'</span><span class="ch">\n</span><span class="sc">{</span>pg0_with<span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Before:
+--------------------------------------------------------------------------------
+# Attention Is All You Need
+
+Ashish Vaswani*
+
+Google Brain
+
+avaswani@google.com
+
+Noam Shazeer*
+
+Goog
+
+After:
+--------------------------------------------------------------------------------
+# Attention Is All You Need ... page 1
+
+Ashish Vaswani*
+
+Google Brain
+
+avaswani@google.com
+
+Noam Sha</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="read_pgs_pg" class="level3">
+<h3 class="anchored" data-anchor-id="read_pgs_pg">read_pgs_pg</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_pgs_pg(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    path:<span class="bu">str</span>, <span class="co"># Path to the markdown file</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>L: <span class="co"># List of markdown pages</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Read all pages of a markdown file and add page numbers to all headings</em></p>
+<div id="4f59e535" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pgs <span class="op">=</span> read_pgs_pg(<span class="st">'files/test/md_all/attention-is-all-you-need'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>hdgs <span class="op">=</span> L([get_hdgs(pg) <span class="cf">for</span> pg <span class="kw">in</span> pgs]).concat()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>hdgs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>['# Attention Is All You Need ... page 1', '# Abstract ... page 1', '## 2 Background ... page 2', '## 3 Model Architecture ... page 2', '# 3.1 Encoder and Decoder Stacks ... page 3', '# 3.2 Attention ... page 3', '# 3.2.1 Scaled Dot-Product Attention ... page 4', '# 3.2.2 Multi-Head Attention ... page 4', '#### 3.2.3 Applications of Attention in our Model ... page 5', '### 3.3 Position-wise Feed-Forward Networks ... page 5', '### 3.4 Embeddings and Softmax ... page 5', '# 3.5 Positional Encoding ... page 6', '# 4 Why Self-Attention ... page 6', '## 5 Training ... page 7', '### 5.1 Training Data and Batching ... page 7', '### 5.2 Hardware and Schedule ... page 7', '### 5.3 Optimizer ... page 7', '### 5.4 Regularization ... page 7', '# 6 Results ... page 8', '# 6.1 Machine Translation ... page 8', '# 6.2 Model Variations ... page 8', '# 6.3 English Constituency Parsing ... page 9', '# 7 Conclusion ... page 10', '# References ... page 10', '# Attention Visualizations ... page 13']</code></pre>
+</div>
+</div>
+<p>To make it easier for an LLM to reference specific headings when suggesting fixes, we format them with index numbers.</p>
+<hr>
+</section>
+<section id="fmt_hdgs_idx" class="level3">
+<h3 class="anchored" data-anchor-id="fmt_hdgs_idx">fmt_hdgs_idx</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fmt_hdgs_idx(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    hdgs:<span class="bu">list</span>, <span class="co"># List of markdown headings</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Formatted string with index</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Format the headings with index</em></p>
+<div id="5f81de73" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>hdgs_fmt <span class="op">=</span> fmt_hdgs_idx(hdgs)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hdgs_fmt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0. # Attention Is All You Need ... page 1
+1. # Abstract ... page 1
+2. ## 2 Background ... page 2
+3. ## 3 Model Architecture ... page 2
+4. # 3.1 Encoder and Decoder Stacks ... page 3
+5. # 3.2 Attention ... page 3
+6. # 3.2.1 Scaled Dot-Product Attention ... page 4
+7. # 3.2.2 Multi-Head Attention ... page 4
+8. #### 3.2.3 Applications of Attention in our Model ... page 5
+9. ### 3.3 Position-wise Feed-Forward Networks ... page 5
+10. ### 3.4 Embeddings and Softmax ... page 5
+11. # 3.5 Positional Encoding ... page 6
+12. # 4 Why Self-Attention ... page 6
+13. ## 5 Training ... page 7
+14. ### 5.1 Training Data and Batching ... page 7
+15. ### 5.2 Hardware and Schedule ... page 7
+16. ### 5.3 Optimizer ... page 7
+17. ### 5.4 Regularization ... page 7
+18. # 6 Results ... page 8
+19. # 6.1 Machine Translation ... page 8
+20. # 6.2 Model Variations ... page 8
+21. # 6.3 English Constituency Parsing ... page 9
+22. # 7 Conclusion ... page 10
+23. # References ... page 10
+24. # Attention Visualizations ... page 13</code></pre>
+</div>
+</div>
+<p>We use a Pydantic model to ensure the LLM returns corrections in a structured format - a list of dictionary mapping heading indices to their corrected versions.</p>
+<hr>
+</section>
+<section id="headingcorrection" class="level3">
+<h3 class="anchored" data-anchor-id="headingcorrection">HeadingCorrection</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> HeadingCorrection(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    data:Any</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>A single heading correction mapping an index to its corrected markdown heading</em></p>
+<hr>
+</section>
+<section id="headingcorrections" class="level3">
+<h3 class="anchored" data-anchor-id="headingcorrections">HeadingCorrections</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> HeadingCorrections(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    data:Any</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Collection of heading corrections returned by the LLM</em></p>
+<p>This prompt instructs the LLM on what types of heading hierarchy errors to fix while preserving the document’s intended structure. It focuses on three main issues:</p>
+<ul>
+<li>level jumps that skip intermediate levels,</li>
+<li>numbering inconsistencies where subsection depth doesn’t match heading level, and</li>
+<li>ensures decreasing levels (moving back up the hierarchy) are preserved.</li>
+</ul>
+<p>Now we can use an LLM to automatically detect and fix these heading hierarchy issues. The function uses litellm (wrapped by the <a href="https://lisette.answer.ai">Lisette package</a> to send the formatted headings to a language model along with our correction rules. The LLM analyzes the structure and returns only the headings that need fixing, mapped by their index numbers.</p>
+<hr>
+</section>
+<section id="fix_hdg_hierarchy" class="level3">
+<h3 class="anchored" data-anchor-id="fix_hdg_hierarchy">fix_hdg_hierarchy</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fix_hdg_hierarchy(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    hdgs:<span class="bu">list</span>, <span class="co"># List of markdown headings</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    prompt:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Prompt to use (instructions part only)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    model:<span class="bu">str</span><span class="op">=</span><span class="st">'claude-sonnet-4-5'</span>, <span class="co"># Model to use</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    api_key:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># API key</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    reasoning_effort:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Reasoning effort: 'low', 'medium', or 'high'</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">dict</span>: <span class="co"># Dictionary of index → corrected heading</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Fix the heading hierarchy</em></p>
+<div id="46c8fcce" class="cell">
+<details open="" class="code-fold">
+<summary>Exported source</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>prompt_fix_hdgs <span class="op">=</span> <span class="st">"""Fix markdown heading hierarchy errors while preserving the document's intended structure.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="st">INPUT FORMAT: Each heading is prefixed with its index number (e.g., "0. # Title ... page 1")</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="st">ANALYSIS STEPS (think through these before outputting corrections):</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="st">1. For each numbered heading (e.g., "4.1", "2.a", "A.1"), identify its parent heading (e.g., "4", "2", "A")</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="st">2. Verify the child heading is exactly one # deeper than its parent</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="st">3. If not, mark it for correction</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="st">RULES - Apply these fixes in order:</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="st">1. **Single H1 rule**: Documents must have exactly ONE # heading (typically the document title at the top)</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="st">   - If index 0 is already #, then all subsequent headings (index 1+) must be ## or deeper</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="st">   - If no H1 exists, the first major heading should be #, and all others ## or deeper</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="st">   - NO exceptions: appendices, references, and all sections are ## or deeper after the title</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="st">2. **Infer depth from numbering patterns**: If headings contain section numbers, deeper nesting means deeper heading level</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="st">   - Parent section (e.g., "1", "2", "A") MUST be shallower than child (e.g., "1.1", "2.a", "A.1")</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="st">   - Child section MUST be exactly one # deeper than parent</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="st">   - Works with any numbering: "1/1.1/1.1.1", "A/A.1/A.1.a", "I/I.A/I.A.1", etc.</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="st">3. **Level jumps**: Headings can only increase by one # at a time when moving deeper</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="st">   - Wrong: ## Section → ##### Subsection</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="st">   - Fixed: ## Section → ### Subsection</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="st">4. **Decreasing levels is OK**: Moving back up the hierarchy (### to ##) is valid for new sections</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="st">5. **Unnumbered headings in numbered documents**: If the document uses numbered headings consistently, any unnumbered heading appearing within that structure is likely misclassified bold text and should be converted to regular text (output the heading text without any # symbols in the corrected field)</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="da1193e2" class="cell">
+<details open="" class="code-fold">
+<summary>Exported source</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>prompt_fix_hdgs_suffix <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="st">OUTPUT: Return a list of corrections, where each correction has:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="st">- index: the heading's index number</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="st">- corrected: the fixed heading text (without the index prefix), or empty string "" to remove the heading entirely</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">IMPORTANT: Preserve the " ... page N" suffix in all corrected headings.</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">Only include headings that need changes.</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="st">Headings to analyze:</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="sc">{headings_list}</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="65b7911f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fixes <span class="op">=</span> fix_hdg_hierarchy(hdgs)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>fixes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>{1: '## Abstract ... page 1',
+ 4: '### 3.1 Encoder and Decoder Stacks ... page 3',
+ 5: '### 3.2 Attention ... page 3',
+ 6: '#### 3.2.1 Scaled Dot-Product Attention ... page 4',
+ 7: '#### 3.2.2 Multi-Head Attention ... page 4',
+ 8: '##### 3.2.3 Applications of Attention in our Model ... page 5',
+ 9: '### 3.3 Position-wise Feed-Forward Networks ... page 5',
+ 10: '### 3.4 Embeddings and Softmax ... page 5',
+ 11: '### 3.5 Positional Encoding ... page 6',
+ 12: '## 4 Why Self-Attention ... page 6',
+ 13: '## 5 Training ... page 7',
+ 14: '### 5.1 Training Data and Batching ... page 7',
+ 15: '### 5.2 Hardware and Schedule ... page 7',
+ 16: '### 5.3 Optimizer ... page 7',
+ 17: '### 5.4 Regularization ... page 7',
+ 18: '## 6 Results ... page 8',
+ 19: '### 6.1 Machine Translation ... page 8',
+ 20: '### 6.2 Model Variations ... page 8',
+ 21: '### 6.3 English Constituency Parsing ... page 9',
+ 22: '## 7 Conclusion ... page 10',
+ 23: '## References ... page 10',
+ 24: '## Attention Visualizations ... page 13'}</code></pre>
+</div>
+</div>
+<p>The corrections come back as string indices, but we need to map the actual heading text to its corrected version for easy replacement in the document.</p>
+<hr>
+</section>
+<section id="mk_fixes_lut" class="level3">
+<h3 class="anchored" data-anchor-id="mk_fixes_lut">mk_fixes_lut</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mk_fixes_lut(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    hdgs:<span class="bu">list</span>, <span class="co"># List of markdown headings</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    model:<span class="bu">str</span><span class="op">=</span><span class="st">'claude-sonnet-4-5'</span>, <span class="co"># Model to use</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    api_key:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># API key</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    prompt:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Prompt to use (instructions part only)</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    reasoning_effort:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Reasoning effort: 'low', 'medium', or 'high'</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">dict</span>: <span class="co"># Dictionary of old → new heading</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Make a lookup table of fixes</em></p>
+<div id="39a9eaf5" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>lut_fixes <span class="op">=</span> mk_fixes_lut(hdgs)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>lut_fixes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'# Abstract ... page 1': '## Abstract ... page 1',
+ '# 3.1 Encoder and Decoder Stacks ... page 3': '### 3.1 Encoder and Decoder Stacks ... page 3',
+ '# 3.2 Attention ... page 3': '### 3.2 Attention ... page 3',
+ '# 3.2.1 Scaled Dot-Product Attention ... page 4': '#### 3.2.1 Scaled Dot-Product Attention ... page 4',
+ '# 3.2.2 Multi-Head Attention ... page 4': '#### 3.2.2 Multi-Head Attention ... page 4',
+ '#### 3.2.3 Applications of Attention in our Model ... page 5': '##### 3.2.3 Applications of Attention in our Model ... page 5',
+ '### 3.3 Position-wise Feed-Forward Networks ... page 5': '### 3.3 Position-wise Feed-Forward Networks ... page 5',
+ '### 3.4 Embeddings and Softmax ... page 5': '### 3.4 Embeddings and Softmax ... page 5',
+ '# 3.5 Positional Encoding ... page 6': '### 3.5 Positional Encoding ... page 6',
+ '# 4 Why Self-Attention ... page 6': '## 4 Why Self-Attention ... page 6',
+ '## 5 Training ... page 7': '## 5 Training ... page 7',
+ '### 5.1 Training Data and Batching ... page 7': '### 5.1 Training Data and Batching ... page 7',
+ '### 5.2 Hardware and Schedule ... page 7': '### 5.2 Hardware and Schedule ... page 7',
+ '### 5.3 Optimizer ... page 7': '### 5.3 Optimizer ... page 7',
+ '### 5.4 Regularization ... page 7': '### 5.4 Regularization ... page 7',
+ '# 6 Results ... page 8': '## 6 Results ... page 8',
+ '# 6.1 Machine Translation ... page 8': '### 6.1 Machine Translation ... page 8',
+ '# 6.2 Model Variations ... page 8': '### 6.2 Model Variations ... page 8',
+ '# 6.3 English Constituency Parsing ... page 9': '### 6.3 English Constituency Parsing ... page 9',
+ '# 7 Conclusion ... page 10': '## 7 Conclusion ... page 10',
+ '# References ... page 10': '## References ... page 10',
+ '# Attention Visualizations ... page 13': '## Attention Visualizations ... page 13'}</code></pre>
+</div>
+</div>
+<p>Now we can apply the fixes to individual pages. We optionally add page numbers to headings for easier navigation in the final document.</p>
+<hr>
+</section>
+<section id="apply_hdg_fixes" class="level3">
+<h3 class="anchored" data-anchor-id="apply_hdg_fixes">apply_hdg_fixes</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_hdg_fixes(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    p:<span class="bu">str</span>, <span class="co"># Page to fix</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    lut_fixes:<span class="bu">dict</span>, <span class="co"># Lookup table of fixes</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Page with fixes applied</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Apply the fixes to the page</em></p>
+<div id="7c1cc5eb" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pg_nb <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> read_pgs_pg(<span class="st">'files/test/md_all/resnet'</span>)[<span class="dv">0</span>]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(apply_hdg_fixes(p, lut_fixes)[:<span class="dv">300</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Deep Residual Learning for Image Recognition ... page 1
+
+Kaiming He
+
+Xiangyu Zhang
+
+Shaoqing Ren
+
+Jian Sun
+
+Microsoft Research
+
+{kahe, v-xiangz, v-shren, jiansun}@microsoft.com
+
+## Abstract ... page 1
+
+Deeper neural networks are more difficult to train. We present a residual learning framework to </code></pre>
+</div>
+</div>
+<p>Finally, we tie everything together in a single function that processes an entire document directory, fixing all heading hierarchy issues and optionally adding page numbers.</p>
+<hr>
+</section>
+<section id="fix_hdgs" class="level3">
+<h3 class="anchored" data-anchor-id="fix_hdgs">fix_hdgs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fix_hdgs(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    src:<span class="bu">str</span>, <span class="co"># Path to source markdown directory</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    model:<span class="bu">str</span><span class="op">=</span><span class="st">'claude-sonnet-4-5'</span>, <span class="co"># LLM model to use for heading analysis</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    dst:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Path to destination directory (defaults to src, modifying in place)</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    img_folder:<span class="bu">str</span><span class="op">=</span><span class="st">'img'</span>, <span class="co"># Name of image subfolder to copy</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    api_key:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># API key</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    prompt:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Prompt to use (instructions part only)</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    reasoning_effort:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Reasoning effort: 'low', 'medium', or 'high'</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Fix heading hierarchy in markdown document</em></p>
+<div id="df36b6c1" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fix_hdgs(<span class="st">'files/test/md_all/resnet'</span>, dst<span class="op">=</span><span class="st">'files/test/md_fixed/resnet'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="6ec8bd0f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>ls <span class="op">-</span>R <span class="st">'files/test/md_fixed/resnet'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>files/test/md_fixed/resnet:
+img            page_10.md  page_2.md  page_5.md  page_8.md
+img_descriptions.json  page_11.md  page_3.md  page_6.md  page_9.md
+page_1.md          page_12.md  page_4.md  page_7.md
+
+files/test/md_fixed/resnet/img:
+img-0.jpeg  img-10.jpeg  img-2.jpeg  img-4.jpeg  img-6.jpeg  img-8.jpeg
+img-1.jpeg  img-11.jpeg  img-3.jpeg  img-5.jpeg  img-7.jpeg  img-9.jpeg</code></pre>
+</div>
+</div>
+<div id="124bc561" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>md <span class="op">=</span> read_pgs(<span class="st">'files/test/md_fixed/resnet'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(md[:<span class="dv">500</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Deep Residual Learning for Image Recognition ... page 1
+
+Kaiming He
+
+Xiangyu Zhang
+
+Shaoqing Ren
+
+Jian Sun
+
+Microsoft Research
+
+{kahe, v-xiangz, v-shren, jiansun}@microsoft.com
+
+## Abstract ... page 1
+
+Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="image-description" class="level2">
+<h2 class="anchored" data-anchor-id="image-description">Image Description</h2>
+<p>Tools for classifying and describing images in markdown documents</p>
+<div id="9dd8891e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>imgs <span class="op">=</span> Path(<span class="st">'files/test/md_fixed/resnet/img'</span>).ls(file_exts<span class="op">=</span><span class="st">'.jpeg'</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>imgs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>(#7) [Path('files/test/md_fixed/resnet/img/img-5.jpeg'),Path('files/test/md_fixed/resnet/img/img-0.jpeg'),Path('files/test/md_fixed/resnet/img/img-1.jpeg'),Path('files/test/md_fixed/resnet/img/img-2.jpeg'),Path('files/test/md_fixed/resnet/img/img-3.jpeg'),Path('files/test/md_fixed/resnet/img/img-6.jpeg'),Path('files/test/md_fixed/resnet/img/img-4.jpeg')]</code></pre>
+</div>
+</div>
+<hr>
+<section id="imgdescription" class="level3">
+<h3 class="anchored" data-anchor-id="imgdescription">ImgDescription</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ImgDescription(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    data:Any</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Image classification and description for OCR’d documents</em></p>
+<p>The two-field Pydantic model filters decorative images via <code>is_informative</code> while providing rich <code>description</code> context for downstream RAG systems.</p>
+<p>The prompt uses a two-step approach: first classify the image as informative or decorative, then provide an appropriate level of detail in the description based on that classification.</p>
+<hr>
+</section>
+<section id="describe_img" class="level3">
+<h3 class="anchored" data-anchor-id="describe_img">describe_img</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> describe_img(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    img_path:Path, <span class="co"># Path to the image file</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    model:<span class="bu">str</span><span class="op">=</span><span class="st">'claude-sonnet-4-5'</span>, <span class="co"># Model to use</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    prompt:<span class="bu">str</span><span class="op">=</span><span class="st">'Analyze this image from an academic/technical document.</span><span class="ch">\n\n</span><span class="st">Step 1: Determine if this image is informative for understanding the document content.</span><span class="ch">\n</span><span class="st">- Informative: charts, diagrams, tables, technical illustrations, experimental results, architectural diagrams</span><span class="ch">\n</span><span class="st">- Non-informative: logos, decorative images, generic photos, page backgrounds</span><span class="ch">\n\n</span><span class="st">Step 2: </span><span class="ch">\n</span><span class="st">- If informative: Provide a detailed description including the type of visualization, key elements and their relationships, important data or patterns, and relevant technical details.</span><span class="ch">\n</span><span class="st">- If non-informative: Provide a brief label (e.g., "Company logo", "Decorative header image")</span><span class="ch">\n\n</span><span class="st">Return your response as JSON with </span><span class="ch">\'</span><span class="st">is_informative</span><span class="ch">\'</span><span class="st"> (boolean) and </span><span class="ch">\'</span><span class="st">description</span><span class="ch">\'</span><span class="st"> (string) fields.'</span>, <span class="co"># Prompt for description</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span>ImgDescription:</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Describe a single image using AsyncChat</em></p>
+<p>We process images asynchronously using <code>AsyncChat</code> to handle multiple images efficiently while respecting API rate limits.</p>
+<div id="4b98b090" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> Path(<span class="st">'files/test/md_fixed/resnet/img/img-0.jpeg'</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="cf">await</span> describe_img(img)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>{“is_informative”: true, “description”: “Two side-by-side line graphs comparing training error (left) and test error (right) versus iteration number for neural networks with different layer depths. Both graphs show performance over approximately 60,000 iterations (6×10^4). The y-axis represents error percentage (0-20%), and the x-axis shows iterations in scientific notation. Two lines are plotted in each graph: a red line representing a 56-layer network and a yellow/green line representing a 20-layer network. In the training error plot, both networks show decreasing error over time, with the 20-layer network achieving lower training error (~2-3%) compared to the 56-layer network (~5-6%). In the test error plot, both networks show similar patterns with the 20-layer network achieving slightly better test error (~10-11%) compared to the 56-layer network (~13-14%). This visualization demonstrates the degradation problem in deep neural networks where deeper networks (56-layer) perform worse than shallower ones (20-layer) on both training and test sets.”}</p>
+<details>
+<ul>
+<li>id: <code>chatcmpl-444fbd64-e128-4f47-b72b-ee254372fa78</code></li>
+<li>model: <code>claude-sonnet-4-5-20250929</code></li>
+<li>finish_reason: <code>stop</code></li>
+<li>usage: <code>Usage(completion_tokens=245, prompt_tokens=605, total_tokens=850, completion_tokens_details=None, prompt_tokens_details=PromptTokensDetailsWrapper(audio_tokens=None, cached_tokens=0, text_tokens=None, image_tokens=None, cache_creation_tokens=0, cache_creation_token_details=CacheCreationTokenDetails(ephemeral_5m_input_tokens=0, ephemeral_1h_input_tokens=0)), cache_creation_input_tokens=0, cache_read_input_tokens=0)</code></li>
+</ul>
+</details>
+</div>
+</div>
+<p>To avoid hitting API rate limits when processing multiple images, we use semaphore-based concurrency control with delays between requests.</p>
+<hr>
+</section>
+<section id="limit" class="level3">
+<h3 class="anchored" data-anchor-id="limit">limit</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> limit(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    semaphore, <span class="co"># Semaphore for concurrency control</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    coro, <span class="co"># Coroutine to execute</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    delay:<span class="bu">float</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Optional delay in seconds after execution</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Execute coroutine with semaphore-based rate limiting and optional delay</em></p>
+<div id="33effde6" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> Path(<span class="st">'files/test/md_fixed/resnet/img/img-0.jpeg'</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="cf">await</span> limit(Semaphore(<span class="dv">2</span>), describe_img(img), delay<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display cell-output-markdown">
+<p>{“is_informative”: true, “description”: “Two side-by-side line graphs comparing training error (left) and test error (right) versus iteration number for neural networks with different layer depths. Both graphs show performance over approximately 60,000 iterations (6×10^4). The y-axis represents error percentage (0-20%), and the x-axis shows iterations in scientific notation. Two lines are plotted in each graph: a red line representing a 56-layer network and a yellow/green line representing a 20-layer network. In the training error plot, both networks show decreasing error over time, with the 20-layer network achieving lower training error (~2-3%) compared to the 56-layer network (~5-6%). In the test error plot, both networks show similar patterns with the 20-layer network achieving slightly better test error (~10-11%) compared to the 56-layer network (~13-14%). This visualization demonstrates the degradation problem in deep neural networks where deeper networks (56-layer) perform worse than shallower ones (20-layer) on both training and test sets.”}</p>
+<details>
+<ul>
+<li>id: <code>chatcmpl-74b8a349-87e1-4ceb-bc33-39cd648404e2</code></li>
+<li>model: <code>claude-sonnet-4-5-20250929</code></li>
+<li>finish_reason: <code>stop</code></li>
+<li>usage: <code>Usage(completion_tokens=245, prompt_tokens=605, total_tokens=850, completion_tokens_details=None, prompt_tokens_details=PromptTokensDetailsWrapper(audio_tokens=None, cached_tokens=0, text_tokens=None, image_tokens=None, cache_creation_tokens=0, cache_creation_token_details=CacheCreationTokenDetails(ephemeral_5m_input_tokens=0, ephemeral_1h_input_tokens=0)), cache_creation_input_tokens=0, cache_read_input_tokens=0)</code></li>
+</ul>
+</details>
+</div>
+</div>
+<hr>
+</section>
+<section id="parse_r" class="level3">
+<h3 class="anchored" data-anchor-id="parse_r">parse_r</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parse_r(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    result, <span class="co"># ModelResponse object from API call</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Extract and parse JSON content from model response</em></p>
+<p>The <code>describe_imgs</code> function orchestrates parallel image processing: it creates async tasks for each image, limits concurrency with a semaphore, adds delays between requests to avoid rate limits, and returns a dictionary mapping filenames to their descriptions for easy lookup during markdown enrichment.</p>
+<hr>
+</section>
+<section id="describe_imgs" class="level3">
+<h3 class="anchored" data-anchor-id="describe_imgs">describe_imgs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> describe_imgs(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    imgs:<span class="bu">list</span>, <span class="co"># List of image file paths to describe</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    model:<span class="bu">str</span><span class="op">=</span><span class="st">'claude-sonnet-4-5'</span>, <span class="co"># Model to use for image description</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    prompt:<span class="bu">str</span><span class="op">=</span><span class="st">'Analyze this image from an academic/technical document.</span><span class="ch">\n\n</span><span class="st">Step 1: Determine if this image is informative for understanding the document content.</span><span class="ch">\n</span><span class="st">- Informative: charts, diagrams, tables, technical illustrations, experimental results, architectural diagrams</span><span class="ch">\n</span><span class="st">- Non-informative: logos, decorative images, generic photos, page backgrounds</span><span class="ch">\n\n</span><span class="st">Step 2: </span><span class="ch">\n</span><span class="st">- If informative: Provide a detailed description including the type of visualization, key elements and their relationships, important data or patterns, and relevant technical details.</span><span class="ch">\n</span><span class="st">- If non-informative: Provide a brief label (e.g., "Company logo", "Decorative header image")</span><span class="ch">\n\n</span><span class="st">Return your response as JSON with </span><span class="ch">\'</span><span class="st">is_informative</span><span class="ch">\'</span><span class="st"> (boolean) and </span><span class="ch">\'</span><span class="st">description</span><span class="ch">\'</span><span class="st"> (string) fields.'</span>, <span class="co"># Prompt template for description</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    semaphore:<span class="bu">int</span><span class="op">=</span><span class="dv">10</span>, <span class="co"># Max concurrent API requests</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    delay:<span class="bu">float</span><span class="op">=</span><span class="fl">0.1</span>, <span class="co"># Delay in seconds between requests</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">dict</span>: <span class="co"># Dict mapping filename to parsed description</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Describe multiple images in parallel with rate limiting</em></p>
+<div id="ab09bb08" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>descs <span class="op">=</span> <span class="cf">await</span> describe_imgs(imgs[:<span class="dv">2</span>], semaphore<span class="op">=</span><span class="dv">10</span>, delay<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>descs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'img-5.jpeg': {'is_informative': True,
+  'description': 'Three line graphs showing training error (%) versus iterations (1e4) for different neural network architectures. Left panel compares plain networks (plain-20, plain-32, plain-44, plain-56) showing error rates between 0-20%, with deeper networks performing worse. Middle panel shows ResNet architectures (ResNet-20, ResNet-32, ResNet-44, ResNet-56, ResNet-110) with error rates 0-20%, demonstrating that deeper ResNets achieve lower error rates, with 56-layer and 20-layer performance labeled. Right panel compares residual-110 and residual-1202 models showing error rates 0-20%, with both converging to similar performance around 5-7% error. The graphs illustrate the effectiveness of residual connections in enabling training of deeper networks compared to plain architectures.'},
+ 'img-0.jpeg': {'is_informative': True,
+  'description': 'Two side-by-side line graphs comparing training error (left) and test error (right) versus iteration number for neural networks with different layer depths. Both graphs show performance over approximately 60,000 iterations (6×10^4). The y-axis represents error percentage (0-20%), and the x-axis shows iterations in scientific notation. Two lines are plotted in each graph: a red line representing a 56-layer network and a yellow/green line representing a 20-layer network. In the training error plot, both networks show decreasing error over time, with the 20-layer network achieving lower training error (~2-3%) compared to the 56-layer network (~5-6%). In the test error plot, both networks show similar patterns with the 20-layer network achieving slightly better test error (~10-11%) compared to the 56-layer network (~13-14%). This visualization demonstrates the degradation problem in deep neural networks where deeper networks (56-layer) perform worse than shallower ones (20-layer) on both training and test sets.'}}</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="save_img_descs" class="level3">
+<h3 class="anchored" data-anchor-id="save_img_descs">save_img_descs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_img_descs(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    descs:<span class="bu">dict</span>, <span class="co"># Dictionary of image descriptions</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    dst_fname:Path, <span class="co"># Path to save the JSON file</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="va">None</span>:</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Save image descriptions to JSON file</em></p>
+<p>We save descriptions to a JSON file so they can be reused without re-processing images, which saves API costs and time. The <code>add_img_descs</code> function checks for this cache file first.</p>
+<div id="39920b87" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>save_img_descs(descs, <span class="st">'files/test/md_fixed/resnet/img_descriptions.json'</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">'files/test/md_fixed/resnet/img_descriptions.json'</span>).read_text()[:<span class="dv">500</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<pre><code>'{\n  "img-5.jpeg": {\n    "is_informative": true,\n    "description": "This figure contains three line graphs showing training error rates over iterations for different neural network architectures. \\n\\nLeft panel: Shows error rates for plain networks (plain-20, plain-32, plain-44, plain-56) over approximately 6\\u00d710^4 iterations. The curves show varying convergence patterns, with the 56-layer and 20-layer networks achieving lower error rates around 10-13%, while deeper networks show less stable'</code></pre>
+</div>
+</div>
+<p>We save descriptions to a JSON file so they can be reused without re-processing images, which saves API costs and time. The <code>add_img_descs</code> function checks for this cache file first.</p>
+<p>Once we have image descriptions, we insert them into the markdown by finding image references and adding formatted description blocks.</p>
+<hr>
+</section>
+<section id="add_descs_to_pg" class="level3">
+<h3 class="anchored" data-anchor-id="add_descs_to_pg">add_descs_to_pg</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_descs_to_pg(</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    pg:<span class="bu">str</span>, <span class="co"># Page markdown content</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    descs:<span class="bu">dict</span>, <span class="co"># Dictionary mapping image filenames to their descriptions</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">str</span>: <span class="co"># Page markdown with descriptions added</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Add AI-generated descriptions to images in page</em></p>
+<p>Image descriptions are inserted directly after the markdown image reference, wrapped in horizontal rules to visually separate them from the document flow. This preserves the original structure while making descriptions easily identifiable.</p>
+<div id="c6695060" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pgs <span class="op">=</span> read_pgs(<span class="st">'files/test/md_fixed/resnet'</span>, join<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pgs[<span class="dv">0</span>][<span class="dv">2000</span>:<span class="dv">3000</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
+
+[^0]![img-0.jpeg](img-0.jpeg)
+
+Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.
+greatly benefited from very deep models.
+Driven by the significance of depth, a question arises: Is learning better networks as easy as stacking more layers? An obstacle to answering this question was the notorious problem of vanishing/exploding gradients [1, 9], which hamper convergence from the beginning. This problem, however, has been largely addressed by normalized initialization $[23,9,37,13]$ and intermediate normalization layers [16], which enable networks with tens of layers to start converging for stochastic gradien</code></pre>
+</div>
+</div>
+<div id="b3a31d29" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>descs <span class="op">=</span> json.loads(Path(<span class="st">'files/test/md_fixed/resnet/img_descriptions.json'</span>).read_text())</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>new_pg <span class="op">=</span> add_descs_to_pg(pgs[<span class="dv">0</span>], descs)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(new_pg[<span class="dv">2000</span>:<span class="dv">4000</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
+
+[^0]![img-0.jpeg](img-0.jpeg)
+AI-generated image description:
+___
+This figure contains two side-by-side line graphs comparing training and test error rates for neural networks with different layer depths (56-layer and 20-layer) over training iterations.
+
+Left panel (Training Error): Shows training error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). The 56-layer network (red line) starts around 19% error and maintains higher error throughout training, ending around 6-7%. The 20-layer network (yellow/olive line) starts around 20% error and decreases more smoothly to approximately 3-4% by the end of training.
+
+Right panel (Test Error): Shows test error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). Both networks show similar patterns to training error. The 56-layer network (red line) maintains higher test error around 14-15%, while the 20-layer network (yellow/olive line) achieves lower test error around 10-11%.
+
+Key observation: The deeper 56-layer network exhibits worse performance (higher error) than the shallower 20-layer network on both training and test sets, suggesting a degradation problem in very deep networks. This visualization likely illustrates the motivation for residual learning architectures that address the degradation problem in deep neural networks.
+___
+
+Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.
+greatly benefited from very deep models.
+Driven by the significance of depth, a question arises: Is learning better networks as easy as stacking more layers? An obstacle to answering this question was the notorious problem of vanish</code></pre>
+</div>
+</div>
+<p>We process all pages in batch to efficiently add descriptions throughout the document.</p>
+<hr>
+</section>
+<section id="add_descs_to_pgs" class="level3">
+<h3 class="anchored" data-anchor-id="add_descs_to_pgs">add_descs_to_pgs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_descs_to_pgs(</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    pgs:<span class="bu">list</span>, <span class="co"># List of page markdown strings</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    descs:<span class="bu">dict</span>, <span class="co"># Dictionary mapping image filenames to their descriptions</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">-&gt;</span><span class="bu">list</span>: <span class="co"># List of pages with descriptions added</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Add AI-generated descriptions to images in all pages</em></p>
+<div id="a91158bb" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>enriched_pgs <span class="op">=</span> add_descs_to_pgs(pgs, descs)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(enriched_pgs[<span class="dv">0</span>][<span class="dv">2000</span>:<span class="dv">3000</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
+
+[^0]![img-0.jpeg](img-0.jpeg)
+AI-generated image description:
+___
+This figure contains two side-by-side line graphs comparing training and test error rates for neural networks with different layer depths (56-layer and 20-layer) over training iterations.
+
+Left panel (Training Error): Shows training error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). The 56-layer network (red line) starts around 19% error and maintains higher error throughout training, ending around 6-7%. The 20-layer network (yellow/olive line) starts around 20% error and decreases more smoothly to approximately 3-4% by the end of training.
+
+Right panel (Test Error): Shows test error percentage (y-axis, 0-20%) versus iterations (x-axis, 0-6 ×10^4). Both networks show similar patterns to training err</code></pre>
+</div>
+</div>
+<p>The <code>force</code> parameter controls whether to regenerate image descriptions: - <code>force=False</code> (default): Loads existing descriptions from <code>img_descriptions.json</code> if it exists, saving time and API costs - <code>force=True</code>: Regenerates all descriptions by calling the vision LLM, even if cached descriptions exist</p>
+<p>Important: If <code>dst</code> is the same as <code>src</code>, descriptions will be added to files that may already contain them from previous runs. To avoid duplicate descriptions, either: - Use a different destination directory each time, or - Ensure your source markdown files are clean before processing</p>
+<hr>
+</section>
+<section id="add_img_descs" class="level3">
+<h3 class="anchored" data-anchor-id="add_img_descs">add_img_descs</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_img_descs(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    src:<span class="bu">str</span>, <span class="co"># Path to source markdown directory</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    dst:<span class="bu">str</span><span class="op">=</span><span class="va">None</span>, <span class="co"># Destination directory (defaults to src if None)</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    model:<span class="bu">str</span><span class="op">=</span><span class="st">'claude-sonnet-4-5'</span>, <span class="co"># Vision model for image description</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    img_folder:<span class="bu">str</span><span class="op">=</span><span class="st">'img'</span>, <span class="co"># Name of folder containing images</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    semaphore:<span class="bu">int</span><span class="op">=</span><span class="dv">2</span>, <span class="co"># Max concurrent API requests</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    delay:<span class="bu">float</span><span class="op">=</span><span class="dv">1</span>, <span class="co"># Delay in seconds between API calls</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    force:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Force regeneration even if cache exists</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    progress:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Log progress messages</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Describe all images in markdown document and insert descriptions inline</em></p>
+<p>Here’s the complete workflow to process a document:</p>
+<div id="8c0158f4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> add_img_descs(<span class="st">'files/test/md_fixed/resnet'</span>, dst<span class="op">=</span><span class="st">'files/test/md_enriched/resnet'</span>, force<span class="op">=</span><span class="va">True</span>, progress<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>__main__ - INFO - Describing 7 images...
+__main__ - INFO - Saved descriptions to files/test/md_fixed/resnet/img_descriptions.json
+__main__ - INFO - Adding descriptions to 12 pages...
+__main__ - INFO - Done! Enriched pages saved to files/test/md_enriched/resnet</code></pre>
+</div>
+</div>
+<div id="9ad672a0" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>pgs <span class="op">=</span> read_pgs(<span class="st">'files/test/md_enriched/resnet'</span>, join<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pgs[<span class="dv">0</span>][<span class="dv">2000</span>:<span class="dv">4000</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3,16]$ on the challenging ImageNet dataset [36] all exploit "very deep" [41] models, with a depth of sixteen [41] to thirty [16]. Many other nontrivial visual recognition tasks $[8,12,7,32,27]$ have also
+
+[^0]![img-0.jpeg](img-0.jpeg)
+AI-generated image description:
+___
+Two side-by-side line graphs comparing training error (left) and test error (right) versus iteration number for neural networks with different layer depths. Both graphs show performance over approximately 60,000 iterations (6×10^4). The y-axis represents error percentage (0-20%), and the x-axis shows iterations in scientific notation. Two lines are plotted in each graph: a red line representing a 56-layer network and a yellow/green line representing a 20-layer network. In the training error plot, both networks show decreasing error over time, with the 20-layer network achieving lower training error (~2-3%) compared to the 56-layer network (~5-6%). In the test error plot, both networks show similar patterns with the 20-layer network achieving slightly better test error (~10-11%) compared to the 56-layer network (~13-14%). This visualization demonstrates the degradation problem in deep neural networks where deeper networks (56-layer) perform worse than shallower ones (20-layer) on both training and test sets.
+___
+
+Figure 1. Training error (left) and test error (right) on CIFAR-10 with 20-layer and 56-layer "plain" networks. The deeper network has higher training error, and thus test error. Similar phenomena on ImageNet is presented in Fig. 4.
+greatly benefited from very deep models.
+Driven by the significance of depth, a question arises: Is learning better networks as easy as stacking more layers? An obstacle to answering this question was the notorious problem of vanishing/exploding gradients [1, 9], which hamper convergence from the beginning. This problem, however, has been largely addressed by normalized initialization $[23,9,37,13]$ and intermediate normalization layers [16], which enable networks</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/franckalbinet\.github\.io\/mistocr");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/franckalbinet/mistocr/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

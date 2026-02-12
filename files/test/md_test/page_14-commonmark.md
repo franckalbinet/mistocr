@@ -1,0 +1,21 @@
+
+
+![](img-4.jpeg) AI-generated image description: *** Attention alignment
+visualization showing word-to-word connections in a neural machine
+translation or sequence-to-sequence model. The diagram displays three
+variations of the same sentence alignment: ‘The Law will never be
+perfect, but its application should be just - this is what we are
+missing, in my opinion. <EOS> <pad>’. The top panel shows a complex
+many-to-many alignment pattern with multiple purple lines of varying
+opacity connecting words between source and target sequences. The middle
+panel shows a simplified alignment focusing on key connections,
+particularly highlighting the alignment between ‘Law’ and ‘application’.
+The bottom panel shows a minimal alignment with just two connections,
+with ‘Law’ and ‘application’ highlighted in purple/beige boxes. This
+type of visualization is commonly used to illustrate attention
+mechanisms in neural networks, demonstrating how the model learns to
+align and translate words or tokens between sequences. *** Figure 4: Two
+attention heads, also in layer 5 of 6, apparently involved in anaphora
+resolution. Top: Full attentions for head 5. Bottom: Isolated attentions
+from just the word ‘its’ for attention heads 5 and 6. Note that the
+attentions are very sharp for this word.
