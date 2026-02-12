@@ -43,10 +43,10 @@ async def pdf_to_md(
     if progress: logger.info(f"Step 1/{n_steps}: Running OCR on {pdf_path}...")
     ocr_dir = ocr_pdf(pdf_path, ocr_dst)
     if progress: logger.info(f"Step 2/{n_steps}: Fixing heading hierarchy...")
-    fix_hdgs(ocr_dir, model=model, **fix_kwargs)
+    fix_hdgs(ocr_dir, **fix_kwargs)
     if add_img_desc:
         if progress: logger.info(f"Step 3/{n_steps}: Adding image descriptions...")
-        await add_img_descs(ocr_dir, dst=dst, model=model, progress=progress, **desc_kwargs)
+        await add_img_descs(ocr_dir, dst=dst, progress=progress, **desc_kwargs)
     elif dst != str(ocr_dir): shutil.copytree(ocr_dir, dst, dirs_exist_ok=True)
     if cleanup: shutil.rmtree(ocr_dst)
     if progress: logger.info("Done!")
