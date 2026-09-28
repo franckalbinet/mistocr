@@ -1,4 +1,30 @@
 [build-system]
-requires = ["setuptools>=64.0,<71"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "mistocr"
+dynamic = ["version"]
+description = "Batch OCR for PDFs with heading restoration and visual content integration"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+authors = [{name = "Solveit", email = "nobody@fast.ai"}]
+keywords = ['nbdev', 'jupyter', 'notebook', 'python']
+classifiers = ["Natural Language :: English", "Intended Audience :: Developers", "Development Status :: 4 - Beta", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3 :: Only"]
+dependencies = ['fastcore', 'mistralai>=2', 'pillow', 'dotenv', 'lisette', 'PyPDF2', 'pycachy']
+
+[project.urls]
+Repository = "https://github.com/franckalbinet/mistocr"
+Documentation = "https://franckalbinet.github.io/mistocr"
+
+[project.entry-points.nbdev]
+mistocr = "mistocr._modidx:d"
+
+[tool.setuptools.dynamic]
+version = {attr = "mistocr.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["mistocr"]
+
+[tool.nbdev]
