@@ -1,0 +1,1 @@
+Sitemap: https://franckalbinet.github.io/mistocr/sitemap.xml

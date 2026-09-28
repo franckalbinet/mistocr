@@ -1,0 +1,54 @@
+
+
+# 1. Introduction
+
+In 2016, the EU and IOM launched the EU-IOM Joint Initiative for Migrant
+Protection and Reintegration, with as overall objective “To contribute
+to facilitating orderly, safe, regular and rights-based migration
+through the facilitation of dignified voluntary return and the
+implementation of development-focused and sustainable reintegration
+policies and processes”. The EU-IOM Joint Initiative in the Horn of
+Africa (JI-HOA) <sup>1</sup> commenced in March 2017 in the Khartoum
+Process countries, with a focus on Djibouti, Ethiopia, Somalia, and
+Sudan. <sup>2</sup> The programme was coordinated by a Regional
+Coordination Unit (RCU) based in the IOM Regional Office for the East
+and Horn of Africa region (Nairobi, Kenya).
+
+In accordance with the programme planning, the JI-HoA underwent a
+Mid-Term Evaluation in 2019 and a Final Independent Evaluation in
+2022/2023, covering the 2017-2022 period, conducted by PPMI Group and
+commissioned by IOM. The evaluation covered the four JI core countries
+in the HoA, namely Ethiopia, Somalia, Sudan and Djibouti, as well as the
+RCU based in Kenya given regionally implemented and coordinated
+activities, looking at all pillars of the Action (migration data;
+capacity building; awareness raising; protection and voluntary assisted
+return; and individual and communitybased reintegration).
+
+The final evaluation assessed the relevance, effectiveness, efficiency,
+coherence, and sustainability of the programme, with an eye on informing
+future programming. To this end, the evaluation assessed the
+achievements of the programme against its key objectives, including a
+re-examination of the relevance of the objectives and of the design. It
+also identified factors that have facilitated or impeded the achievement
+of the objectives.
+
+To gather the necessary data, the evaluation relied on desk research,
+interviews with stakeholders, focus groups with beneficiaries, and a
+validation workshop. Furthermore, a range of monitoring and evaluation
+activities were already implemented under the JI-HoA. The results of
+these M&E activities formed an important data source for the current
+evaluation.
+
+The current Report presents the findings of the evaluation against the
+evaluation criteria and provides holistic conclusions and
+recommendations to build on the achievements of the JI-HoA and improve
+future programming.
+
+\[^0\] \[^0\]: <sup>1</sup> Formal title: Facility on Sustainable and
+Dignified Return and Reintegration in Support of the Khartoum Process
+<sup>2</sup> As per the project’s Description of the Action, some
+limited activities mainly involving assisted voluntary return and
+reintegration (AVRR) were also carried out in other Khartoum Process
+countries (Eritrea as conditions allow, Kenya, South Sudan, and Uganda)
+and from countries along the Southern migration routes (notably Malawi,
+Mozambique, Zambia, Zimbabwe, South Africa and Tanzania)

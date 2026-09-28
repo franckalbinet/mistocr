@@ -1,0 +1,14 @@
+
+
+This Final Evaluation Report was commissioned by IOM and developed by
+the evaluation team of PPMI Group, including: Loes van der Graaf,
+Rimantas Dumcius, Radvilė Bankauskaitė, Anna Kiss-Pal and Laura
+Daukšaitė, as well as by external expert Anthony Roger Plant. The
+evaluation team is grateful to all IOM staff and stakeholders to the
+JI-HoA for their time taken to participate in interviews. The team is
+especially grateful to the returnees, migrants, and community members
+who participated in Focus Group Discussions.
+
+This publication was funded by the European Union. Its contents are the
+sole responsibility of PPMI Group and do not necessarily reflect the
+views of the European Union
