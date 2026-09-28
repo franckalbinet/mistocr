@@ -30,8 +30,8 @@ async def pdf_to_md(
     model:str='claude-sonnet-4-5',  # Model to use for heading fixes and image descriptions
     add_img_desc:bool=True,         # Whether to add image descriptions
     progress:bool=True,             # Whether to show progress messages
-    fix_kwargs:dict=None,           # Extra kwargs for fix_hdgs (e.g. prompt, max_tokens)
-    desc_kwargs:dict=None,          # Extra kwargs for add_img_descs (e.g. prompt, batch_sz, max_conc)
+    fix_kwargs:dict=None,           # Extra kwargs for fix_hdgs (e.g. prompt, reasoning_effort)
+    desc_kwargs:dict=None,          # Extra kwargs for add_img_descs (e.g. semaphore, delay, force)
     ):
     "Convert a single PDF to markdown with OCR, fixed heading hierarchy, and optional image descriptions. Batch version planned. See `fix_hdgs` and `add_img_descs` for available kwargs."
     if isinstance(pdf_path, (list, tuple)): raise ValueError("pdf_to_md processes a single PDF; batch version coming soon")
@@ -45,7 +45,7 @@ async def pdf_to_md(
     if progress: logger.info(f"Step 1/{n_steps}: Running OCR on {pdf_path}...")
     ocr_dir = ocr_pdf(pdf_path, ocr_dst)
     if progress: logger.info(f"Step 2/{n_steps}: Fixing heading hierarchy...")
-    fix_hdgs(ocr_dir, **fix_kwargs)
+    await fix_hdgs(ocr_dir, **fix_kwargs)
     if add_img_desc:
         if progress: logger.info(f"Step 3/{n_steps}: Adding image descriptions...")
         await add_img_descs(ocr_dir, dst=dst, progress=progress, **desc_kwargs)

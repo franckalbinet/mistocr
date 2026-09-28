@@ -40,6 +40,6 @@ d = { 'settings': { 'branch': 'main',
                                 'mistocr.refine.get_hdgs': ('refine.html#get_hdgs', 'mistocr/refine.py'),
                                 'mistocr.refine.limit': ('refine.html#limit', 'mistocr/refine.py'),
                                 'mistocr.refine.mk_fixes_lut': ('refine.html#mk_fixes_lut', 'mistocr/refine.py'),
-                                'mistocr.refine.parse_r': ('refine.html#parse_r', 'mistocr/refine.py'),
                                 'mistocr.refine.read_pgs_pg': ('refine.html#read_pgs_pg', 'mistocr/refine.py'),
-                                'mistocr.refine.save_img_descs': ('refine.html#save_img_descs', 'mistocr/refine.py')}}}
+                                'mistocr.refine.save_img_descs': ('refine.html#save_img_descs', 'mistocr/refine.py'),
+                                'mistocr.refine.structured_llm': ('refine.html#structured_llm', 'mistocr/refine.py')}}}
